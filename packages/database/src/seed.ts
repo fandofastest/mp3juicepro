@@ -47,17 +47,32 @@ export async function seedDatabase(mongoUri?: string) {
   }
 
   // 3. Seed Categories
-  const categoryCount = await Category.countDocuments();
-  if (categoryCount === 0) {
-    const categoriesList = [
-      { title: "Top Hits", slug: "top-hits", color: "#1DB954", sortOrder: 1, enabled: true },
-      { title: "Focus & Chill", slug: "focus-chill", color: "#8E44AD", sortOrder: 2, enabled: true },
-      { title: "Workout Energy", slug: "workout-energy", color: "#E67E22", sortOrder: 3, enabled: true },
-      { title: "Party Anthems", slug: "party-anthems", color: "#E74C3C", sortOrder: 4, enabled: true },
-    ];
-    await Category.insertMany(categoriesList);
-    Logger.info("Default categories seeded.");
+  const categoriesList = [
+    { title: "Top Hits", slug: "top-hits", color: "#1DB954", sortOrder: 1, enabled: true },
+    { title: "Focus & Chill", slug: "focus-chill", color: "#8E44AD", sortOrder: 2, enabled: true },
+    { title: "Workout Energy", slug: "workout-energy", color: "#E67E22", sortOrder: 3, enabled: true },
+    { title: "Party Anthems", slug: "party-anthems", color: "#E74C3C", sortOrder: 4, enabled: true },
+    { title: "Lofi Beats", slug: "lofi-beats", color: "#34495E", sortOrder: 5, enabled: true },
+    { title: "Acoustic Pop", slug: "acoustic-pop", color: "#D35400", sortOrder: 6, enabled: true },
+    { title: "Hip Hop & Rap", slug: "hip-hop-rap", color: "#2C3E50", sortOrder: 7, enabled: true },
+    { title: "Rock Classics", slug: "rock-classics", color: "#7F8C8D", sortOrder: 8, enabled: true },
+    { title: "Electronic / EDM", slug: "electronic-edm", color: "#9B59B6", sortOrder: 9, enabled: true },
+    { title: "K-Pop Fever", slug: "kpop-fever", color: "#E91E63", sortOrder: 10, enabled: true },
+    { title: "Jazz & Blues", slug: "jazz-blues", color: "#F1C40F", sortOrder: 11, enabled: true },
+    { title: "Indie Folk", slug: "indie-folk", color: "#16A085", sortOrder: 12, enabled: true },
+    { title: "Gaming Soundtracks", slug: "gaming-soundtracks", color: "#2980B9", sortOrder: 13, enabled: true },
+    { title: "Meditation & Sleep", slug: "meditation-sleep", color: "#008080", sortOrder: 14, enabled: true },
+    { title: "Latin Dance", slug: "latin-dance", color: "#FF5722", sortOrder: 15, enabled: true },
+  ];
+
+  for (const cat of categoriesList) {
+    await Category.findOneAndUpdate(
+      { slug: cat.slug },
+      { $setOnInsert: { isDeleted: false }, ...cat },
+      { upsert: true }
+    );
   }
+  Logger.info("Default categories seeded and synchronized.");
 
   // 4. Seed Banners
   const bannerCount = await Banner.countDocuments();

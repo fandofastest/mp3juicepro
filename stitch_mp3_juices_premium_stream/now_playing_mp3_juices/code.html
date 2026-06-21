@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Now Playing - Mp3 Juices</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .progress-bar-glow {
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+        }
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(0.98); }
+        }
+        .animate-pulse-soft {
+            animation: pulse-soft 3s ease-in-out infinite;
+        }
+        .lyrics-gradient {
+            background: linear-gradient(to top, #131313 0%, rgba(19, 19, 19, 0) 100%);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#e5e2e1",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed": "#001f24",
+                        "secondary-fixed-dim": "#00daf3",
+                        "surface-container-high": "#2a2a2a",
+                        "on-surface": "#e5e2e1",
+                        "on-tertiary-fixed-variant": "#5d3f3c",
+                        "primary-container": "#39ff14",
+                        "tertiary-container": "#ffd3ce",
+                        "surface-container-low": "#1c1b1b",
+                        "surface": "#131313",
+                        "inverse-on-surface": "#313030",
+                        "surface-tint": "#2ae500",
+                        "tertiary": "#fff8f7",
+                        "outline-variant": "#3c4b35",
+                        "surface-dim": "#131313",
+                        "primary-fixed": "#79ff5b",
+                        "secondary": "#bdf4ff",
+                        "secondary-fixed": "#9cf0ff",
+                        "inverse-primary": "#106e00",
+                        "surface-variant": "#353534",
+                        "on-primary-fixed-variant": "#095300",
+                        "on-primary-container": "#107100",
+                        "error": "#ffb4ab",
+                        "on-primary-fixed": "#022100",
+                        "on-primary": "#053900",
+                        "surface-container": "#201f1f",
+                        "secondary-container": "#00e3fd",
+                        "on-secondary-fixed-variant": "#004f58",
+                        "background": "#131313",
+                        "surface-bright": "#393939",
+                        "on-secondary": "#00363d",
+                        "primary-fixed-dim": "#2ae500",
+                        "on-surface-variant": "#baccb0",
+                        "primary": "#efffe3",
+                        "on-tertiary": "#442927",
+                        "surface-container-highest": "#353534",
+                        "tertiary-fixed": "#ffdad6",
+                        "on-secondary-container": "#00616d",
+                        "inverse-surface": "#e5e2e1",
+                        "outline": "#85967c",
+                        "on-tertiary-container": "#7a5955",
+                        "on-tertiary-fixed": "#2c1513",
+                        "tertiary-fixed-dim": "#e7bdb8",
+                        "error-container": "#93000a",
+                        "on-error": "#690005",
+                        "surface-container-lowest": "#0e0e0e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "xl": "64px",
+                        "margin-desktop": "48px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "lg": "40px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Montserrat"],
+                        "display-lg": ["Montserrat"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Montserrat"],
+                        "headline-lg": ["Montserrat"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md overflow-hidden">
+<!-- Blurred Background Layer -->
+<div class="fixed inset-0 z-0">
+<div class="absolute inset-0 bg-background/60 z-10 backdrop-blur-3xl"></div>
+<div class="w-full h-full bg-cover bg-center transition-all duration-1000 scale-110 opacity-40" data-alt="A high-energy cinematic album cover with vibrant neon green and deep charcoal abstract shapes. The composition is atmospheric and modern, featuring synthetic glows and sharp geometric edges that define a premium music aesthetic. Soft focus textures and light leaks create a sense of depth and immersive electricity. Professional studio lighting with high contrast and deep blacks." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAa17ElQje7mLSOk9U0DLKnwR2ndEndTS1A-qBPtIz9f0eUA5P95WGvx2LvPYcaWvLO0Z8pj2ILwnZomEL79HOKuq3Kn8XYT8G5QI_RHowA7GUsRKaSVAiw84Yhr3iNbThYJEN0BksKRV-GPlyZKbWgGNHuL9A5N5lki8tPIs46Lk1si5VgdMTuslH2kmtGiLG9NvwjyC07d0HmC_ksY0Pnz79B6J9xdHxPDuzn7shkubWQH89e1sIAZG7jAK4g2A0NJjhlFntoXiA')">
+</div>
+</div>
+<!-- Top Navigation (Shell Component: TopAppBar) -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-outline-variant/10 flex justify-between items-center px-margin-mobile py-sm">
+<button class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 duration-200">expand_more</button>
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-widest uppercase">Now Playing</span>
+<span class="font-headline-md text-headline-md text-primary tracking-tighter">Mp3 Juices</span>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 duration-200">more_vert</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="relative z-10 flex-1 flex flex-col items-center justify-center px-margin-mobile pt-24 pb-32 max-w-lg mx-auto w-full">
+<!-- Album Art Card -->
+<div class="w-full aspect-square relative group">
+<div class="absolute inset-0 bg-primary-container/10 rounded-xl blur-3xl opacity-0 group-hover:opacity-40 transition-opacity duration-500"></div>
+<div class="w-full h-full rounded-xl overflow-hidden shadow-2xl relative z-10 glass-panel">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A high-energy cinematic album cover with vibrant neon green and deep charcoal abstract shapes. The composition is atmospheric and modern, featuring synthetic glows and sharp geometric edges that define a premium music aesthetic. Soft focus textures and light leaks create a sense of depth and immersive electricity. Professional studio lighting with high contrast and deep blacks." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr1XDDqNaWnJ1C_tYfxt0B2JTqZh7kHKZdTckPf_5I12GyMiC6s9ruXDg7meJrvLvYPxMAmOxiYqi2TIrHkRI79cVNsibyP6oyJaoPsO_JdMgMMuP2geioFRZE1tH41m0uMfHr47tK97ibZWCIyih8aaOK8Mb6ycCR5NXz7GYEpHVQcyuXMO2wxxgamcxAU4gcbMCevYcN5urO90me9GT6ZI1Jf6vGWpBeSz7gZvggXUBA8x-PfGX_4u7bsHvB3a1VO7gP9jVSJY4"/>
+</div>
+</div>
+<!-- Metadata Section -->
+<div class="w-full mt-lg flex justify-between items-end">
+<div class="flex flex-col">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-xs">Electric Dreams</h1>
+<p class="font-body-lg text-body-lg text-secondary opacity-70">Synthwave Collective</p>
+</div>
+<button class="material-symbols-outlined text-primary-container text-3xl mb-1 active:scale-90 transition-transform" data-weight="fill">favorite</button>
+</div>
+<!-- Playback Progress Section -->
+<div class="w-full mt-lg">
+<div class="relative w-full h-1 bg-on-surface-variant/20 rounded-full cursor-pointer group">
+<div class="absolute top-0 left-0 h-full w-[45%] bg-gradient-to-r from-secondary-container to-primary-container rounded-full progress-bar-glow">
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+</div>
+<div class="flex justify-between mt-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant/60">2:14</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant/60">4:48</span>
+</div>
+</div>
+<!-- Controls Section -->
+<div class="w-full mt-lg flex items-center justify-between">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shuffle</button>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-4xl text-on-surface-variant hover:text-primary active:scale-90 transition-all">skip_previous</button>
+<button class="w-20 h-20 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all" id="play-pause-btn">
+<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">pause</span>
+</button>
+<button class="material-symbols-outlined text-4xl text-on-surface-variant hover:text-primary active:scale-90 transition-all">skip_next</button>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">repeat</button>
+</div>
+</main>
+<!-- Lyrics Swipe-Up Indicator -->
+<div class="fixed bottom-0 left-0 w-full z-40 h-24 lyrics-gradient flex flex-col items-center justify-end pb-margin-mobile group cursor-pointer">
+<div class="flex flex-col items-center animate-pulse-soft">
+<span class="material-symbols-outlined text-on-surface-variant/80">keyboard_double_arrow_up</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant/60 tracking-widest mt-1">LYRICS</span>
+</div>
+</div>
+<!-- Bottom Navigation Shell (Filter Applied: Transactional Screen - Hide BottomNavBar as this is a focused task) -->
+<!-- Note: UI requirements specify playback controls as main interaction, global nav is suppressed to focus user on content -->
+<script>
+        // Micro-interactions
+        const playBtn = document.getElementById('play-pause-btn');
+        let isPlaying = true;
+
+        playBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            const icon = playBtn.querySelector('span');
+            icon.textContent = isPlaying ? 'pause' : 'play_arrow';
+            
+            if (isPlaying) {
+                playBtn.classList.add('bg-primary-container');
+                playBtn.classList.remove('bg-surface-bright');
+            } else {
+                playBtn.classList.remove('bg-primary-container');
+                playBtn.classList.add('bg-surface-bright');
+            }
+        });
+
+        // Add visualizer-like micro-animation to progress bar (demo only)
+        let progress = 45;
+        const progressBar = document.querySelector('.bg-gradient-to-r');
+        const currentTime = document.querySelectorAll('.font-label-sm')[1]; // Just for show
+        
+        setInterval(() => {
+            if (isPlaying && progress < 100) {
+                progress += 0.05;
+                progressBar.style.width = `${progress}%`;
+            }
+        }, 1000);
+    </script>
+</body></html>

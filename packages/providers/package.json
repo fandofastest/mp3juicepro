@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@headless/types": "*",
-    "@headless/utils": "*"
+    "@headless/utils": "*",
+    "@headless/database": "*"
   }
 }

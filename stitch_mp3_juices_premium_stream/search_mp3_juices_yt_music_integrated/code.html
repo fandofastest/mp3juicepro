@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mp3 Juices - Search</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(20, 28, 38, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .genre-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #424752;
+            border-radius: 10px;
+        }
+        @keyframes pulse-blue {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .playing-bar {
+            animation: pulse-blue 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* YT Music specific chip style */
+        .ytm-chip {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+        .ytm-chip.active {
+            background: #dbe3f2;
+            color: #070f19;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#dbe3f2",
+                        "outline-variant": "#424752",
+                        "tertiary-fixed": "#d6e3ff",
+                        "tertiary-container": "#005db9",
+                        "secondary": "#cbc6b8",
+                        "tertiary-fixed-dim": "#aac7ff",
+                        "on-background": "#dbe3f2",
+                        "on-primary-fixed": "#001b3f",
+                        "surface-container-low": "#141c26",
+                        "surface-container-highest": "#2d3541",
+                        "on-secondary-fixed": "#1d1c13",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#001b3e",
+                        "on-tertiary-container": "#c7d9ff",
+                        "secondary-container": "#4a473c",
+                        "surface-dim": "#0c141e",
+                        "on-secondary": "#333027",
+                        "primary-container": "#0d5cb9",
+                        "primary-fixed-dim": "#abc7ff",
+                        "error": "#ffb4ab",
+                        "surface-container-lowest": "#070f19",
+                        "surface-container-high": "#232a35",
+                        "inverse-on-surface": "#29313c",
+                        "on-primary-container": "#c8d9ff",
+                        "on-error-container": "#ffdad6",
+                        "surface-variant": "#2d3541",
+                        "on-tertiary": "#002f64",
+                        "on-tertiary-fixed-variant": "#00458d",
+                        "on-primary": "#002f66",
+                        "primary": "#abc7ff",
+                        "on-secondary-fixed-variant": "#4a473c",
+                        "on-surface-variant": "#c2c6d4",
+                        "on-primary-fixed-variant": "#004590",
+                        "secondary-fixed": "#e8e2d3",
+                        "surface": "#0c141e",
+                        "outline": "#8c909e",
+                        "surface-tint": "#abc7ff",
+                        "surface-container": "#18202b",
+                        "tertiary": "#aac7ff",
+                        "secondary-fixed-dim": "#cbc6b8",
+                        "primary-fixed": "#d7e2ff",
+                        "inverse-primary": "#0d5cb9",
+                        "surface-bright": "#323a45",
+                        "inverse-surface": "#dbe3f2",
+                        "on-secondary-container": "#bab5a7",
+                        "on-error": "#690005",
+                        "background": "#0c141e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "xl": "64px",
+                        "margin-desktop": "48px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "lg": "40px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Montserrat"],
+                        "display-lg": ["Montserrat"],
+                        "label-md": ["Montserrat"],
+                        "body-lg": ["Montserrat"],
+                        "headline-md": ["Montserrat"],
+                        "headline-lg": ["Montserrat"],
+                        "body-md": ["Montserrat"],
+                        "label-sm": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden custom-scrollbar">
+<!-- Top AppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-outline-variant/10 flex justify-between items-center px-margin-mobile md:px-margin-desktop py-sm">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a young creative person with neon accents, against a deep charcoal background. The individual has a modern, stylish appearance with high-end headphones around their neck, reflecting a premium music-tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlEDeRB2D6Asvby4bZw_xGIoy_1aSrIGlQiNyhOIX2HA4FHhAtpmDQoJNxyjKcUejq6TiW8N6JQSbczddTAV-gjrM4pa60dl0Gi7mFUq0kbH90Ox_eIkhY_FfFyxhq4ZSNDNvruEd8A8hMIMl-Q6G4NwE3EbCrL7X8-a0dfuyrqsqL4w5MCHpM_xa7wIU0xe0gZit0nA6wR3KhxwYCH8iTPyOM1jvV52dM83OtN0eP1mh7AYvWBpy4T5V4VeAF-OmyFeOG4VxIttI"/>
+</div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary tracking-tighter">Mp3 Juices</h1>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-opacity p-base">settings</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto min-h-screen">
+<!-- Search Section - Integrated Style -->
+<section class="mb-lg">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-highest/50 border-none rounded-full py-3.5 pl-12 pr-4 text-body-lg focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-on-surface-variant/50 focus:bg-surface-container-highest" placeholder="Search artists, songs, videos" type="text"/>
+</div>
+<!-- YT Music Category Chips -->
+<div class="flex gap-2.5 mt-md overflow-x-auto no-scrollbar py-1">
+<button class="ytm-chip active px-4 py-1.5 rounded-full text-label-md whitespace-nowrap">All</button>
+<button class="ytm-chip px-4 py-1.5 rounded-full text-label-md whitespace-nowrap">Songs</button>
+<button class="ytm-chip px-4 py-1.5 rounded-full text-label-md whitespace-nowrap">Videos</button>
+<button class="ytm-chip px-4 py-1.5 rounded-full text-label-md whitespace-nowrap">Albums</button>
+<button class="ytm-chip px-4 py-1.5 rounded-full text-label-md whitespace-nowrap">Artists</button>
+<button class="ytm-chip px-4 py-1.5 rounded-full text-label-md whitespace-nowrap">Playlists</button>
+</div>
+</section>
+<!-- Recent Searches (Horizontal Scroll Style) -->
+<section class="mb-xl">
+<div class="flex justify-between items-end mb-md">
+<h2 class="font-headline-md text-headline-md">Recent Searches</h2>
+<button class="text-label-sm font-label-sm text-primary hover:underline uppercase tracking-wider">Clear all</button>
+</div>
+<div class="flex gap-sm overflow-x-auto pb-4 no-scrollbar">
+<!-- Recent Item 1 -->
+<div class="flex-shrink-0 group cursor-pointer">
+<div class="w-32 h-32 md:w-40 md:h-40 rounded-lg overflow-hidden mb-sm relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Vibrant digital artwork for a synthwave music album featuring a futuristic city skyline with glowing neon pink and teal lights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy1mDOFA6KYkTzQZ1B5RmNEiK3GPWDmHZNDDO6qAgZhYSCYNZyl9GWiD6M5XY_TbUvXdxrExFB59nQotk0p3KKDkAEp9UOyBzhfnNzZJuDCQf9VH8blBqrIQgUs4b80z6VbL8qt3vZ1AwYl3MbO9FAzQ3iacydPoObnGCjnlc5ZtJNWuYm4u4jZQc8t_XNfxtA3v4TZ1wx2dumSizA5D_FVW00oqh7wY4MkcjHPcVyBNlPYF2SJPMoBRRqJE9NNS51znEFkcN6JCI"/>
+<div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
+<button class="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<p class="font-label-md text-label-md truncate w-32 md:w-40">After Hours</p>
+<p class="text-label-sm text-on-surface-variant">Song • The Weeknd</p>
+</div>
+<!-- Recent Item 2 -->
+<div class="flex-shrink-0 group cursor-pointer">
+<div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden mb-sm relative border-2 border-transparent group-hover:border-primary/50 transition-all">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Professional black and white studio photography of a famous female jazz vocalist singing into a vintage microphone." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB34ldEhmpHpYjtFDwkZPA0CFCodRZP4x_q0idLFliCIjxf0DOFQouVuI_K213kzBpk7LPXGmLRJb2pd1fXSqerOEygtiAJB2Lg4Zcwdmf91HO1pLuFzmnKZC7haAKQ_nNRkLBAx0JzbKgAKFJxk8x-1sGo9GNdW6MHd7G8t-ZDbMq5m8fCyZEObPq4Wqc8y24qxnM_Y3ikkgR5w_bDczVBD3LB33_3WnZQspZENKHxZrTbHAxHObVXNO8icciNcLwRfCX3kCdEJGE"/>
+</div>
+<p class="font-label-md text-label-md text-center truncate w-32 md:w-40">Jazz Vibes</p>
+<p class="text-label-sm text-on-surface-variant text-center">Artist</p>
+</div>
+<!-- Recent Item 3 -->
+<div class="flex-shrink-0 group cursor-pointer">
+<div class="w-32 h-32 md:w-40 md:h-40 rounded-lg overflow-hidden mb-sm relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A futuristic podcast cover art featuring 3D holographic sound waves." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuOlQAUaOX7JrTwZk2nG2tq6nyHATPAtUj_q7k5E8tXJ1P5c1uoHYGgaTFZuSOPNySlvLMRv5VlUgglggov0d982a-DwJbk_eWBadhPjHLiDjc_ySTG0RGRZhbo43BpMf8R7vRciKjBPtNN3puFnLpQh8RWV-a0g-U31YPcbNNDYyrTr6fF1psNucniu8lOKqNSCKu-hvujGCEd5qalCmVyF5GH_Bk7y3W2leI1kfAQA-fXTZigcsTiRAQNl5lGn-fQ3dP2rZO6Tc"/>
+<div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
+</div>
+<p class="font-label-md text-label-md truncate w-32 md:w-40">Daily Tech News</p>
+<p class="text-label-sm text-on-surface-variant">Podcast</p>
+</div>
+</div>
+</section>
+<!-- Category Grid - Styled like YT Music Browse -->
+<section class="mb-xl">
+<h2 class="font-headline-md text-headline-md mb-md">Browse All</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Pop Card -->
+<div class="genre-card relative h-28 md:h-36 rounded-lg overflow-hidden cursor-pointer group bg-gradient-to-br from-[#1e40af] to-[#0d5cb9]">
+<div class="absolute inset-0 p-4 z-10">
+<h3 class="font-headline-md text-headline-md text-white text-[20px]">Pop</h3>
+</div>
+<div class="absolute right-0 bottom-0 w-20 h-20 rotate-[-20deg] translate-x-4 translate-y-4 opacity-90 group-hover:rotate-0 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300">
+<img class="w-full h-full object-cover shadow-2xl rounded-md" data-alt="Minimalist 3D rendered bubblegum pink vinyl record" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0lcPG4ILcRSk_JqTZ-QJrMP7CbDNTXPHE6bftF9vB-fnenz97H2T2e0H2BWQ9aWp3tSTqNaLR-fPpYtGNAZJ30tUXnt_hVSg408xJY55DWKMypPhkpkAWpvPzNxANYG8C5UXP5rt6-apjnJhd25_eotf-9B3rP6EIVyepTDL8LqkmkUWZQUlPyNHGQTO6-h_8gL9liQboEhOlI9hM4a77LIirPwZSUuFMMvOe_5mVTI__MqaURehD0akB2p3ZTGy-scBlnouT9Aw"/>
+</div>
+</div>
+<!-- Hip Hop Card -->
+<div class="genre-card relative h-28 md:h-36 rounded-lg overflow-hidden cursor-pointer group bg-gradient-to-br from-[#3b82f6] to-[#1d4ed8]">
+<div class="absolute inset-0 p-4 z-10">
+<h3 class="font-headline-md text-headline-md text-white text-[20px]">Hip Hop</h3>
+</div>
+<div class="absolute right-0 bottom-0 w-20 h-20 rotate-[-20deg] translate-x-4 translate-y-4 opacity-90 group-hover:rotate-0 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300">
+<img class="w-full h-full object-cover shadow-2xl rounded-md" data-alt="A premium 3D illustration of a golden microphone" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCJqrkz1U_LPA9jMTN2PUsoPXqFb8T6tAVh7EKeKKToc01SKLOUdhdRa4pJ9WbWBq3zB8dVFcONYC0nFJ3Eg8_6-92FUJLmZFgH9EEJzqwsW9PY7-BDJmmGXtCbkzfce8uRxJWizbcHOA8lWK2CqN6HwXSTIhUVmZ7d7-vV_tAheaiLQDrq5PgzN39ciovbJzYILQm2MYSzmQtxHzuwf2dXCI22d3OWmWb18NJLZr99ckZN_xMdPfX45e8uKbrfX549tBn8dRPESk"/>
+</div>
+</div>
+<!-- Rock Card -->
+<div class="genre-card relative h-28 md:h-36 rounded-lg overflow-hidden cursor-pointer group bg-gradient-to-br from-[#0f172a] to-[#1e293b]">
+<div class="absolute inset-0 p-4 z-10">
+<h3 class="font-headline-md text-headline-md text-white text-[20px]">Rock</h3>
+</div>
+<div class="absolute right-0 bottom-0 w-20 h-20 rotate-[-20deg] translate-x-4 translate-y-4 opacity-90 group-hover:rotate-0 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300">
+<img class="w-full h-full object-cover shadow-2xl rounded-md" data-alt="A stylized 3D electric guitar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByXbggTNErqyunleFsYO6mo17yQwvxA_VXl7SMe2ouur-P_LfyJy8PI0zNRIxCraWznfIjLRVCX1OLcT8GZjIyHEveu5GP_azTKDoqqZPZ6iQ1Nrdw9mr9viOq_oorNXiRA106DPfIjF1XcqWjyB2PLjWd0dgojgy8mDZIrFGpJldG1iLSdY4sMoMv4mvJiZrxHlX_nVs8KsNwKRdpGIWEEVC4ixFtrpzjXVviWGKrudE_9TGldR8IP9l9KqX3Vecv4k2NWFphbnY"/>
+</div>
+</div>
+<!-- Jazz Card -->
+<div class="genre-card relative h-28 md:h-36 rounded-lg overflow-hidden cursor-pointer group bg-gradient-to-br from-[#2563eb] to-[#1d4ed8]">
+<div class="absolute inset-0 p-4 z-10">
+<h3 class="font-headline-md text-headline-md text-white text-[20px]">Jazz</h3>
+</div>
+<div class="absolute right-0 bottom-0 w-20 h-20 rotate-[-20deg] translate-x-4 translate-y-4 opacity-90 group-hover:rotate-0 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300">
+<img class="w-full h-full object-cover shadow-2xl rounded-md" data-alt="Elegant 3D render of a brass saxophone mouthpiece" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPAZ-rXvhQSLLC63jd6WDWSrHYaW4huOy2SHbm25jFFILNY7TCGzFsgO0QexmoMk0Lhv8rCgDBxBX6LH-1xQd6Qw-eOit6-se26ZDImGZAo3Ydfy37MwZH2PHVCUhsuvKcZtRY9B2xNWs_zIPT13axXSVYdZUh6_dNRI1UWyUoUlEzyHDgTP7MXy7tYBM3TzUiiJ4f4udWn1sbsqix6EEy4nM9jzOqXo6W-jZ3IfHkvmOxVks9vNIIYG6HK5omFuy4svluSvIlAJI"/>
+</div>
+</div>
+<!-- Electronic Card -->
+<div class="genre-card relative h-28 md:h-36 rounded-lg overflow-hidden cursor-pointer group bg-gradient-to-br from-[#1e3a8a] to-[#1e40af]">
+<div class="absolute inset-0 p-4 z-10">
+<h3 class="font-headline-md text-headline-md text-white text-[20px]">Electronic</h3>
+</div>
+<div class="absolute right-0 bottom-0 w-20 h-20 rotate-[-20deg] translate-x-4 translate-y-4 opacity-90 group-hover:rotate-0 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300">
+<img class="w-full h-full object-cover shadow-2xl rounded-md" data-alt="Abstract 3D geometric shapes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgOqF-zl9j5cQiNWbILgWFNS0jo5-5l0iV_7pNhwSAWc4tOVoMuz4RWq1hC_dQiEmkCvoFvXv3PjEtM3yOD-7yY62Pbe0P5wd672IGQUUKstV6LPD3pBP9bw73Q1cFGk40ygBvUbopDcHJW55XCaDC1-KHKUHgSX03r2iz6ItmEluy5BrlhZKYe7G4sf9zxkZxhbn0l3hsdsy2aqxQ6BOJZDgh7E-AWnPItz5oDEcmXYhsxoGNFGFWGjjQTWXXCEBh5w7QkOD0AsM"/>
+</div>
+</div>
+<!-- R&B Card -->
+<div class="genre-card relative h-28 md:h-36 rounded-lg overflow-hidden cursor-pointer group bg-gradient-to-br from-[#1d4ed8] to-[#1e3a8a]">
+<div class="absolute inset-0 p-4 z-10">
+<h3 class="font-headline-md text-headline-md text-white text-[20px]">R&amp;B</h3>
+</div>
+<div class="absolute right-0 bottom-0 w-20 h-20 rotate-[-20deg] translate-x-4 translate-y-4 opacity-90 group-hover:rotate-0 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300">
+<img class="w-full h-full object-cover shadow-2xl rounded-md" data-alt="Lush velvet textures and glowing neon heart shape" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyMNHFcwf9X92LBEmZkGmmklPcrlP1uhvJFMpI_npMych-9zqOfln4n2I9p9yj-Ret0QI4P3k3KPczNJt1KtqKmYLCCN1IphEPC5M4i0f5GbMa_hm_YubO79ZD4evirlFMdn7zAdjiA5ahvVFbsoqnL4ekmHfO9La-0Wi4EQYuqUGXinqL0UJNGjdS0zW4Acqx9iiehzWA_G3rcrbO1PEpzQ6en7j2kxTVj7gqrRWeSgp47Rs1ScPTWdQqTzonIudT6O57xDF3Dh0"/>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Player Bar -->
+<div class="fixed bottom-20 md:bottom-0 left-0 w-full z-40 px-sm pb-base md:pb-0">
+<div class="max-w-7xl mx-auto glass-card rounded-xl md:rounded-none md:border-x-0 md:border-b-0 p-sm md:px-margin-desktop md:py-md flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<div class="w-12 h-12 rounded overflow-hidden flex-shrink-0 shadow-lg">
+<img class="w-full h-full object-cover" data-alt="Modern album cover art for an electronic track" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrCIzplEC6mATb0dKj1PmJabEfm0gCu2d-iPWn1KHHBT7bmYs4baDOstvOuV1Yx5259MQnSMBtQq4r4Ez6fHvjM0BM-qP9xS42aNIFxxtqxUuJXLSe0bki6HM397KeZlJQWTQnmPXKkWSnfhJr2StUZfzluA4nVxwxYseD43e-5gZdXevQCmm3eAparph4aSBZuNB7bjqQEPeEKCku3azHmYzUYsn2qaZ1SctoALORqAvJGxTQkLlcewz9cQmWJ2fXxBni9jS9lBU"/>
+</div>
+<div class="overflow-hidden">
+<h4 class="font-label-md text-label-md truncate">Neon Pulse</h4>
+<p class="text-label-sm text-on-surface-variant truncate">Synth Horizon</p>
+</div>
+<button class="material-symbols-outlined text-primary ml-sm playing-bar">favorite</button>
+</div>
+<div class="hidden md:flex flex-col items-center flex-1 max-w-md px-lg">
+<div class="flex items-center gap-md mb-xs">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-white transition-colors">shuffle</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-white transition-colors">skip_previous</button>
+<button class="w-10 h-10 bg-white text-background rounded-full flex items-center justify-center hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-white transition-colors">skip_next</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-white transition-colors">repeat</button>
+</div>
+<div class="w-full flex items-center gap-sm">
+<span class="text-label-sm text-on-surface-variant">1:42</span>
+<div class="h-1 flex-1 bg-white/10 rounded-full relative group cursor-pointer">
+<div class="absolute top-0 left-0 h-full w-[40%] bg-primary rounded-full"></div>
+<div class="absolute top-1/2 left-[40%] -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 shadow-lg transition-opacity"></div>
+</div>
+<span class="text-label-sm text-on-surface-variant">3:45</span>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<button class="md:hidden w-10 h-10 flex items-center justify-center text-on-background">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="hidden md:flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined">volume_up</span>
+<div class="w-24 h-1 bg-white/10 rounded-full">
+<div class="w-[70%] h-full bg-white rounded-full"></div>
+</div>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-white transition-colors">list</button>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 bg-background/95 backdrop-blur-2xl border-t border-outline-variant/5 shadow-xl flex justify-around items-center pt-base pb-6 md:pb-base px-sm">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-label-sm text-label-sm mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">library_music</span>
+<span class="font-label-sm text-label-sm mt-1">Library</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</a>
+</nav>
+<script>
+        // Chip interaction logic
+        document.querySelectorAll('.ytm-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.ytm-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+            });
+        });
+
+        // Micro-interactions for search bar focus
+        const searchInput = document.querySelector('input[type="text"]');
+        if (searchInput) {
+            searchInput.addEventListener('focus', () => {
+                // Focus styling handled by Tailwind classes
+            });
+        }
+
+        // Simple mock for "Fast feeling"
+        document.querySelectorAll('.genre-card, .ytm-chip').forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.transform = 'scale(0.97)';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.transform = '';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+    </script>
+</body></html>

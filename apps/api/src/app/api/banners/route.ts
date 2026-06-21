@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     }
 
     const banner = await Banner.create(parsed.data);
-    return successResponse(banner, "Banner created successfully", 21);
+    return successResponse(banner, "Banner created successfully", 201);
   } catch (error: any) {
     return errorResponse(error.message || "Internal server error", 500);
   }

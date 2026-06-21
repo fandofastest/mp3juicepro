@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
       creatorName: userPayload.email.split("@")[0],
     });
 
-    return successResponse(playlist, "Playlist created successfully", 21);
+    return successResponse(playlist, "Playlist created successfully", 201);
   } catch (error: any) {
     return errorResponse(error.message || "Internal server error", 500);
   }

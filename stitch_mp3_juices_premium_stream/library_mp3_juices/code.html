@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mp3 Juices - Library</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(30, 30, 30, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .active-tab {
+            background: #39ff14; /* primary-container */
+            color: #107100; /* on-primary-container */
+        }
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .scrolling-touch {
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-background": "#e5e2e1",
+                    "on-error-container": "#ffdad6",
+                    "on-secondary-fixed": "#001f24",
+                    "secondary-fixed-dim": "#00daf3",
+                    "surface-container-high": "#2a2a2a",
+                    "on-surface": "#e5e2e1",
+                    "on-tertiary-fixed-variant": "#5d3f3c",
+                    "primary-container": "#39ff14",
+                    "tertiary-container": "#ffd3ce",
+                    "surface-container-low": "#1c1b1b",
+                    "surface": "#131313",
+                    "inverse-on-surface": "#313030",
+                    "surface-tint": "#2ae500",
+                    "tertiary": "#fff8f7",
+                    "outline-variant": "#3c4b35",
+                    "surface-dim": "#131313",
+                    "primary-fixed": "#79ff5b",
+                    "secondary": "#bdf4ff",
+                    "secondary-fixed": "#9cf0ff",
+                    "inverse-primary": "#106e00",
+                    "surface-variant": "#353534",
+                    "on-primary-fixed-variant": "#095300",
+                    "on-primary-container": "#107100",
+                    "error": "#ffb4ab",
+                    "on-primary-fixed": "#022100",
+                    "on-primary": "#053900",
+                    "surface-container": "#201f1f",
+                    "secondary-container": "#00e3fd",
+                    "on-secondary-fixed-variant": "#004f58",
+                    "background": "#131313",
+                    "surface-bright": "#393939",
+                    "on-secondary": "#00363d",
+                    "primary-fixed-dim": "#2ae500",
+                    "on-surface-variant": "#baccb0",
+                    "primary": "#efffe3",
+                    "on-tertiary": "#442927",
+                    "surface-container-highest": "#353534",
+                    "tertiary-fixed": "#ffdad6",
+                    "on-secondary-container": "#00616d",
+                    "inverse-surface": "#e5e2e1",
+                    "outline": "#85967c",
+                    "on-tertiary-container": "#7a5955",
+                    "on-tertiary-fixed": "#2c1513",
+                    "tertiary-fixed-dim": "#e7bdb8",
+                    "error-container": "#93000a",
+                    "on-error": "#690005",
+                    "surface-container-lowest": "#0e0e0e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "xl": "64px",
+                    "margin-desktop": "48px",
+                    "gutter": "24px",
+                    "margin-mobile": "16px",
+                    "lg": "40px",
+                    "md": "24px",
+                    "sm": "12px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Montserrat"],
+                    "display-lg": ["Montserrat"],
+                    "label-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Montserrat"],
+                    "headline-lg": ["Montserrat"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-outline-variant/10 flex justify-between items-center px-margin-mobile py-sm md:px-margin-desktop">
+<div class="flex items-center gap-base">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center border border-outline/20">
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="person">person</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary tracking-tighter">Mp3 Juices</h1>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:opacity-80 transition-opacity" data-icon="settings">settings</span>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto w-full">
+<!-- Search/Filter Bar -->
+<div class="mb-lg">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary-fixed-dim transition-colors" data-icon="search">search</span>
+<input class="w-full bg-[#2A2A2A] border border-white/10 rounded-xl py-3 pl-12 pr-4 text-on-surface focus:outline-none focus:border-primary-container/50 focus:ring-1 focus:ring-primary-container/30 transition-all font-body-md text-body-md" placeholder="Search your library" type="text"/>
+</div>
+</div>
+<!-- Library Tabs -->
+<nav class="flex gap-sm mb-lg overflow-x-auto scrolling-touch no-scrollbar py-2">
+<button class="active-tab px-5 py-2 rounded-full font-label-md text-label-md transition-all active:scale-95 whitespace-nowrap">Playlists</button>
+<button class="bg-white/10 hover:bg-white/20 text-on-surface px-5 py-2 rounded-full font-label-md text-label-md transition-all active:scale-95 whitespace-nowrap">Artists</button>
+<button class="bg-white/10 hover:bg-white/20 text-on-surface px-5 py-2 rounded-full font-label-md text-label-md transition-all active:scale-95 whitespace-nowrap">Albums</button>
+<button class="bg-white/10 hover:bg-white/20 text-on-surface px-5 py-2 rounded-full font-label-md text-label-md transition-all active:scale-95 whitespace-nowrap">Downloaded</button>
+</nav>
+<!-- Featured Special Card: Liked Songs -->
+<section class="mb-xl">
+<div class="glass-card rounded-xl p-md flex items-center gap-md cursor-pointer hover:scale-[1.01] transition-transform duration-300 group">
+<div class="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-[#79ff5b] to-[#00daf3] rounded-lg flex items-center justify-center shadow-lg shadow-primary-container/20">
+<span class="material-symbols-outlined text-black text-3xl md:text-4xl" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div class="flex-grow">
+<h2 class="font-headline-md text-headline-md text-on-surface">Liked Songs</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">428 tracks • Playlist</p>
+</div>
+<div class="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container shadow-xl">
+<span class="material-symbols-outlined" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Playlists Bento/Grid -->
+<section>
+<div class="flex justify-between items-end mb-md">
+<h3 class="font-headline-md text-headline-md">Your Playlists</h3>
+<span class="material-symbols-outlined text-primary cursor-pointer" data-icon="add_circle">add_circle</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-gutter">
+<!-- Playlist Card 1 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-square overflow-hidden rounded-xl mb-base bg-surface-container-high">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A moody, high-contrast album cover visual featuring futuristic neon synthwave aesthetics with electric greens and deep charcoals. The composition is sleek and professional, echoing a premium music streaming brand with sharp digital textures and vibrant light trails." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCR75ferN23r9cqkd3Avrxpa066Dk1f1Oo3e41GOddWxUlr5hJqwydoBF5sMEVOr5pSF6rwxdh8L9ouhuiQ3roH-GoLHOQc69am51g-s7KB_mGdZo8qnllMeDUjHail94BYiHXKJKSVDFAFsvjZLb7Kcdb_IIwMTTl1HERCXdYedY251HOdSIVrmmLuVvaj9kMDjrXRQoLZ46eEIgQmHxhrOLe-LG2YiMH9cZLUMHc9YE0YyWc6QzRcmBaGcF0OsSHgP0vgjevG3TU"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-4xl" data-icon="play_circle" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<h4 class="font-label-md text-label-md text-on-surface truncate">Late Night Phonk</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">By Alex Rivera</p>
+</div>
+<!-- Playlist Card 2 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-square overflow-hidden rounded-xl mb-base bg-surface-container-high">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A minimalist music playlist cover with abstract fluid shapes in electric teal and emerald green. The lighting is soft and cinematic, creating a glassmorphic depth effect. The overall style is clean, modern, and high-energy, perfect for a professional audio streaming interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZwJ-EvtJy0CzMoSWD71W-xByKFD8aJQNOrs8tWIpVB9Pq4Gv-PPeUW99FcVVokrTvtaczCYJeFADpA4E_KGjRAhq-9P3vM1nf313ma8mLEHyj77Ha72jP-1-yV3bPH2lOvLgcYzARvoJA9xBxuHC6MrpN1zqp3tkX4oa0B01ILDo-lWTpdXusTWGfmkbq0AnI0Ti2_TjxHugmTG1Ar4goGTGufTQO_4UyzUmt9_VHSYnldtcxB9W938FZE-XqofkGCzNJDyX6PmA"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-4xl" data-icon="play_circle" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<h4 class="font-label-md text-label-md text-on-surface truncate">Focus Flow</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Updated yesterday</p>
+</div>
+<!-- Playlist Card 3 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-square overflow-hidden rounded-xl mb-base bg-surface-container-high">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A striking portrait of a digital artist rendered in a futuristic studio setting with volumetric green lighting and deep charcoal shadows. The image is professional and artistically focused, with a high-end dark mode aesthetic typical of premium music platforms." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCo_sx3soKhF0AVmN-WJVvLufcQfmj-XFj_9TnLRKtOvFhF8J1RBekrNQXyoV4Hv-fnPnJVEKm987zVt7tyBYjVa1KRLJ2bI0hPd-Fh1HF3jmKxV8-rtQmpDNZhR76yKPhG8LuV3lQcs_chIFTV_e7KQ037PXdkGKHJUILyNPCYueFrrlcZg-5PeMIfxcs67Ufa1MsnxOYLZheGlv5T-k2wJ4Sx_J6Buz2IrQ09Xz9LD-BxEwzEcOEDWO8Jv1Rt_SwocfHw5VpW0S8"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-4xl" data-icon="play_circle" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<h4 class="font-label-md text-label-md text-on-surface truncate">Chill Lo-fi Vibes</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">54 tracks</p>
+</div>
+<!-- Playlist Card 4 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-square overflow-hidden rounded-xl mb-base bg-surface-container-high">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A macro shot of a vintage synthesizer glowing with electric green LEDs against a matte black surface. The lighting creates a sense of high-energy technical precision. The image is sophisticated and moody, perfectly fitting the brand identity of electric sophistication." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA468uqF6j-z1L0M0gqF89vF9YjwRmJo9nUIct75DCNA8lQAMezTtUrp-bD91GmOlFYhAnLrvVgvHUTxhiG6YhJafXuEDTovV1_43ydHuFzaQl5DgTLzhmljm5xSr4Igmgzl1Escgkrv-U2yXq-Wj69L9LA2RhCWZz0LoAKyGwRFk_Ib3dAx5MNDSNtKWUkDGoZJdfzYuUi826bDL2fr7DE-0QCjt74qXPzZ1ORkpuXN4mhhw0KuotUNXwt-Cz25juo0wHKXOQx6aY"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-4xl" data-icon="play_circle" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<h4 class="font-label-md text-label-md text-on-surface truncate">Techno Pulse</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Personal Mix</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Playback Bar (Mobile Focused Context) -->
+<div class="fixed bottom-20 left-4 right-4 md:left-margin-desktop md:right-margin-desktop z-[60] bg-surface/90 backdrop-blur-2xl rounded-xl border border-white/5 shadow-2xl p-sm flex items-center gap-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A small square thumbnail for a music track featuring a vibrant geometric pattern in electric green and cyan on a dark charcoal background. The artwork feels synthetic and energetic, matching the sleek glassmorphic UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD82D4e711TzeToCsKYvAU9sHxAkXiLEA_x8t4mCuC1RIlHyQH6oqcMRjA_y0Og3sQbjUmYq_Bjp4Bgy3c3ZWlTUCMh5SG3v8vRB0wMbih0VO8ZzDcu5XTBpv-bXmJXZ30RiGy0KbEJQODVdbzLd7-HOSGmToUv5WResxAp7_LZAg0oJQFppt0VMhBjUXdEtqN67U44Yg0eQ6FQBWocELyTzWqnHP-9YxbBX_mpbR8Ncsa3xft5d5IhwfZd2UwlwaVODdOkehA7qS0"/>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex items-center gap-xs">
+<h5 class="font-label-md text-label-md text-on-surface truncate">Starboy</h5>
+<div class="flex gap-0.5">
+<div class="w-0.5 h-3 bg-primary-container animate-pulse"></div>
+<div class="w-0.5 h-4 bg-primary-container animate-[pulse_1s_infinite]"></div>
+<div class="w-0.5 h-2 bg-primary-container animate-[pulse_1.5s_infinite]"></div>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant truncate">The Weeknd</p>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface" data-icon="devices">devices</span>
+<span class="material-symbols-outlined text-primary-container text-3xl" data-icon="pause_circle" style="font-variation-settings: 'FILL' 1;">pause_circle</span>
+</div>
+</div>
+<!-- Bottom Navigation Bar (Mandatory Shell) -->
+<footer class="fixed bottom-0 w-full z-50 bg-surface/90 backdrop-blur-2xl border-t border-outline-variant/5 shadow-xl flex justify-around items-center pt-base pb-safe px-sm md:hidden">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 transition-transform active:scale-90 duration-150">
+<span class="material-symbols-outlined" data-icon="library_music" style="font-variation-settings: 'FILL' 1;">library_music</span>
+<span class="font-label-sm text-label-sm">Library</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</footer>
+<script>
+        // Simple Micro-interaction for tabs
+        const tabs = document.querySelectorAll('nav button');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active-tab', 'bg-primary-container', 'text-on-primary-container'));
+                tabs.forEach(t => t.classList.add('bg-white/10', 'text-on-surface'));
+                tab.classList.remove('bg-white/10', 'text-on-surface');
+                tab.classList.add('active-tab');
+            });
+        });
+
+        // Add active: scale interaction for global navigation logic
+        document.querySelectorAll('footer > div').forEach(btn => {
+            btn.addEventListener('mousedown', () => btn.classList.add('scale-90'));
+            btn.addEventListener('mouseup', () => btn.classList.remove('scale-90'));
+            btn.addEventListener('mouseleave', () => btn.classList.remove('scale-90'));
+        });
+    </script>
+</body></html>

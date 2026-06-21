@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       enabled: enabled !== undefined ? enabled : true,
     });
 
-    return successResponse(notification, "Notification created successfully", 21);
+    return successResponse(notification, "Notification created successfully", 201);
   } catch (error: any) {
     return errorResponse(error.message || "Internal server error", 500);
   }

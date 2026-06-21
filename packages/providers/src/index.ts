@@ -1,12 +1,18 @@
 import { MusicProvider } from "./MusicProvider";
 import { MockMusicProvider } from "./MockMusicProvider";
+import { YoutubeMusicProvider } from "./YoutubeMusicProvider";
+import { LocalMusicProvider } from "./LocalMusicProvider";
 
 export * from "./MusicProvider.js";
 export * from "./MockMusicProvider.js";
+export * from "./YoutubeMusicProvider.js";
+export * from "./LocalMusicProvider.js";
 
 export class ProviderFactory {
   private static providers: Record<string, MusicProvider> = {
     mock: new MockMusicProvider(),
+    youtube: new YoutubeMusicProvider(),
+    local: new LocalMusicProvider(),
   };
 
   static registerProvider(name: string, provider: MusicProvider) {

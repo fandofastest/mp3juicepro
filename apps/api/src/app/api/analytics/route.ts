@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       metadata: metadata || {},
     });
 
-    return successResponse(event, "Event tracked successfully", 21);
+    return successResponse(event, "Event tracked successfully", 201);
   } catch (error: any) {
     return errorResponse(error.message || "Internal server error", 500);
   }

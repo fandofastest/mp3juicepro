@@ -61,6 +61,7 @@ export interface IHomeSectionDocument extends IAuditable {
   enabled: boolean;
   provider: string;
   providerConfig?: Map<string, any>;
+  tracks?: any[];
 }
 
 const HomeSectionSchema = new Schema<IHomeSectionDocument>(
@@ -81,6 +82,7 @@ const HomeSectionSchema = new Schema<IHomeSectionDocument>(
     enabled: { type: Boolean, default: true, index: true },
     provider: { type: String, default: "local" },
     providerConfig: { type: Schema.Types.Map, of: Schema.Types.Mixed },
+    tracks: { type: [Schema.Types.Mixed], default: [] },
     isDeleted: { type: Boolean, default: false, index: true },
     deletedAt: { type: Date },
   },
@@ -88,7 +90,7 @@ const HomeSectionSchema = new Schema<IHomeSectionDocument>(
 );
 
 // --- CATEGORY SCHEMA ---
-export interface ICategoryDocument extends IAuditable {
+export interface ICategoryDocument extends Document {
   title: string;
   slug: string;
   description?: string;
@@ -97,6 +99,9 @@ export interface ICategoryDocument extends IAuditable {
   color?: string;
   sortOrder: number;
   enabled: boolean;
+  tracks?: any[];
+  isDeleted: boolean;
+  deletedAt?: Date;
 }
 
 const CategorySchema = new Schema<ICategoryDocument>(
@@ -106,9 +111,10 @@ const CategorySchema = new Schema<ICategoryDocument>(
     description: { type: String },
     icon: { type: String },
     cover: { type: String },
-    color: { type: String },
+    color: { type: String, default: "#1DB954" },
     sortOrder: { type: Number, default: 0, index: true },
     enabled: { type: Boolean, default: true, index: true },
+    tracks: { type: [Schema.Types.Mixed], default: [] },
     isDeleted: { type: Boolean, default: false, index: true },
     deletedAt: { type: Date },
   },
@@ -203,6 +209,7 @@ FavoriteSchema.index({ userId: 1, type: 1, targetId: 1 }, { unique: true });
 // --- HISTORY SCHEMA ---
 export interface IHistoryDocument extends Document {
   userId: string;
+  vid: string;
   trackId: string;
   title: string;
   artist: string;
@@ -215,6 +222,7 @@ export interface IHistoryDocument extends Document {
 const HistorySchema = new Schema<IHistoryDocument>(
   {
     userId: { type: String, required: true, index: true },
+    vid: { type: String, required: true, index: true },
     trackId: { type: String, required: true, index: true },
     title: { type: String, required: true },
     artist: { type: String, required: true },
@@ -331,7 +339,102 @@ const NotificationSchema = new Schema<INotificationDocument>(
   { timestamps: true }
 );
 
+// --- TRACK SCHEMA (LOCAL SYNCED MUSIC) ---
+export interface ITrackDocument extends Document {
+  vid: string;
+  title: string;
+  artist: string;
+  cover: string;
+  duration: number;
+  provider: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const TrackSchema = new Schema<ITrackDocument>(
+  {
+    vid: { type: String, required: true, unique: true, index: true },
+    title: { type: String, required: true },
+    artist: { type: String, required: true },
+    cover: { type: String, required: true },
+    duration: { type: Number, required: true },
+    provider: { type: String, default: "youtube", index: true },
+  },
+  { timestamps: true }
+);
+
+// --- APP CONFIG SCHEMA (FOR MULTI APPS ADS/ADMOB CONFIG) ---
+export interface IAppConfigDocument extends Document {
+  packageName: string;
+  admob: {
+    appId?: string;
+    bannerAdUnitId?: string;
+    interstitialAdUnitId?: string;
+    rewardedAdUnitId?: string;
+    nativeAdUnitId?: string;
+  };
+  ads: {
+    bannerEnabled: boolean;
+    interstitialEnabled: boolean;
+    rewardedEnabled: boolean;
+    nativeEnabled: boolean;
+    interstitialInterval: number;
+    adProvider: "admob" | "applovin" | "none";
+  };
+  promoBanner?: {
+    enabled: boolean;
+    image?: string;
+    targetUrl?: string;
+  };
+  appUpdate?: {
+    forceUpdate: boolean;
+    minimumVersion?: string;
+    updateUrl?: string;
+  };
+  safeMode: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const AppConfigSchema = new Schema<IAppConfigDocument>(
+  {
+    packageName: { type: String, required: true, unique: true, index: true },
+    admob: {
+      appId: { type: String },
+      bannerAdUnitId: { type: String },
+      interstitialAdUnitId: { type: String },
+      rewardedAdUnitId: { type: String },
+      nativeAdUnitId: { type: String },
+    },
+    ads: {
+      bannerEnabled: { type: Boolean, default: false },
+      interstitialEnabled: { type: Boolean, default: false },
+      rewardedEnabled: { type: Boolean, default: false },
+      nativeEnabled: { type: Boolean, default: false },
+      interstitialInterval: { type: Number, default: 5 },
+      adProvider: { type: String, enum: ["admob", "applovin", "none"], default: "none" },
+    },
+    promoBanner: {
+      enabled: { type: Boolean, default: false },
+      image: { type: String },
+      targetUrl: { type: String },
+    },
+    appUpdate: {
+      forceUpdate: { type: Boolean, default: false },
+      minimumVersion: { type: String },
+      updateUrl: { type: String },
+    },
+    safeMode: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
+
 // Export Mongoose Models
+if (mongoose.models.Category) delete mongoose.models.Category;
+if (mongoose.models.History) delete mongoose.models.History;
+if (mongoose.models.HomeSection) delete mongoose.models.HomeSection;
+if (mongoose.models.AppConfig) delete mongoose.models.AppConfig;
+
 export const User = mongoose.models.User || mongoose.model<IUserDocument>("User", UserSchema);
 export const HomeSection = mongoose.models.HomeSection || mongoose.model<IHomeSectionDocument>("HomeSection", HomeSectionSchema);
 export const Category = mongoose.models.Category || mongoose.model<ICategoryDocument>("Category", CategorySchema);
@@ -343,4 +446,6 @@ export const AnalyticsEvent = mongoose.models.AnalyticsEvent || mongoose.model<I
 export const AuditLog = mongoose.models.AuditLog || mongoose.model<IAuditLogDocument>("AuditLog", AuditLogSchema);
 export const SystemSettings = mongoose.models.SystemSettings || mongoose.model<ISystemSettingsDocument>("SystemSettings", SystemSettingsSchema);
 export const Notification = mongoose.models.Notification || mongoose.model<INotificationDocument>("Notification", NotificationSchema);
+export const Track = mongoose.models.Track || mongoose.model<ITrackDocument>("Track", TrackSchema);
+export const AppConfig = mongoose.models.AppConfig || mongoose.model<IAppConfigDocument>("AppConfig", AppConfigSchema);
 

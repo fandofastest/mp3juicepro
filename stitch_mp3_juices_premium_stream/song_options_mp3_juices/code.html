@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mp3 Juices - Song Options</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#bab5a7",
+                        "surface": "#0c141e",
+                        "on-secondary": "#333027",
+                        "surface-container-high": "#232a35",
+                        "primary": "#abc7ff",
+                        "secondary-fixed": "#e8e2d3",
+                        "on-secondary-fixed": "#1d1c13",
+                        "inverse-surface": "#dbe3f2",
+                        "tertiary-container": "#005db9",
+                        "on-tertiary-fixed-variant": "#00458d",
+                        "secondary": "#cbc6b8",
+                        "on-primary-fixed": "#001b3f",
+                        "on-primary-fixed-variant": "#004590",
+                        "surface-bright": "#323a45",
+                        "surface-variant": "#2d3541",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed-dim": "#aac7ff",
+                        "background": "#0c141e",
+                        "outline": "#8c909e",
+                        "inverse-on-surface": "#29313c",
+                        "surface-container": "#18202b",
+                        "primary-fixed": "#d7e2ff",
+                        "surface-container-lowest": "#070f19",
+                        "surface-container-low": "#141c26",
+                        "tertiary-fixed": "#d6e3ff",
+                        "primary-container": "#0d5cb9",
+                        "on-background": "#dbe3f2",
+                        "surface-dim": "#0c141e",
+                        "primary-fixed-dim": "#abc7ff",
+                        "secondary-fixed-dim": "#cbc6b8",
+                        "on-tertiary-fixed": "#001b3e",
+                        "secondary-container": "#4a473c",
+                        "on-tertiary-container": "#c7d9ff",
+                        "inverse-primary": "#0d5cb9",
+                        "on-tertiary": "#002f64",
+                        "on-primary": "#002f66",
+                        "tertiary": "#aac7ff",
+                        "surface-tint": "#abc7ff",
+                        "on-error": "#690005",
+                        "on-surface": "#dbe3f2",
+                        "on-primary-container": "#c8d9ff",
+                        "outline-variant": "#424752",
+                        "on-surface-variant": "#c2c6d4",
+                        "on-secondary-fixed-variant": "#4a473c",
+                        "error-container": "#93000a",
+                        "surface-container-highest": "#2d3541",
+                        "on-error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-page": "2rem",
+                        "container-max": "1200px",
+                        "stack-sm": "0.5rem",
+                        "stack-lg": "2rem",
+                        "stack-md": "1rem",
+                        "gutter-grid": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Montserrat"],
+                        "body-sm": ["Montserrat"],
+                        "label-md": ["Montserrat"],
+                        "body-md": ["Montserrat"],
+                        "headline-lg": ["Montserrat"],
+                        "headline-xl": ["Montserrat"],
+                        "headline-lg-mobile": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "14px", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bottom-sheet-transition {
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .backdrop-blur-custom {
+            backdrop-filter: blur(20px) saturate(180%);
+        }
+        .active-scale:active {
+            transform: scale(0.95);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary selection:text-on-primary overflow-hidden">
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 z-0">
+
+</div>
+<!-- Main Content Canvas (Mocking a Search/Library State) -->
+<div class="relative z-10 h-screen flex flex-col p-margin-page">
+<!-- Top App Bar Mock -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-4 py-4 bg-background/80 backdrop-blur-xl border-b border-outline-variant/10">
+<span class="font-headline-lg text-headline-lg text-primary tracking-tighter">Mp3 Juices</span>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer" data-icon="search">search</span>
+<div class="w-10 h-10 rounded-full bg-surface-container-high border border-outline-variant/20 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A modern profile avatar of a stylish user with neon blue backlighting, reflecting a high-energy digital persona in a dark urban environment. The lighting emphasizes clean lines and a professional music enthusiast aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBc7wYZp213bJbEKGi5UTTncwf4WEhq4MSPQNS9F_LxqPlaNm60Ys04tcVgpx-AVU9PDk-j-e6XasDg_qLDiWuH9myaH5wSRm8Kb2Mlc7noGxNAQX8Yf8uTGEhTSK6zEaA0Wq0KGn9c0WyEJVYSVqQ2DnghrPbjyMuPaLD5iQ_eO9h1sTKw40OQ3XpxLwT-x0V4sn4NjxCe0PIHgkRtJygI-R7KkPSuhDipLQ3TDJqOzqUikDAwpQ7lTVEjfEgOx0TaOBoLVfH-Qqc"/>
+</div>
+</div>
+</header>
+<!-- Dummy Content -->
+<main class="mt-20 space-y-6">
+<div class="space-y-4">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Now Playing</h2>
+<div class="p-4 bg-surface-container/40 border border-outline-variant/20 rounded-xl flex items-center justify-between group cursor-pointer" onclick="toggleBottomSheet()">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-lg overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Cinematic album art for a high-energy synthwave track featuring a futuristic cityscape at night with deep blue and electric cyan glows. The style is modern, sharp, and intensely digital-first to match the Mp3 Juices brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAndUzZkgUDQ3InVEnahfUOgjJbPGlBX00TDGvlWjXdJyUtUceU-objcwrHmt0PWuVrgWXiRGZmxIssBf3lnEgEPv7kFihtvH6x7F9Bpm0cG1qa3hYyRiAOsSJIRwsvY-ue46CWgLP5iDGQa_mL8y9XZiGterUwiY9K4V3xuu9PQJrjvhSuJppNtH80JvMxmZDc8CdBkzwutk8pTz-SjGDVFMrNVnrfaaq5GMbC-fLkVO3FTHIJWg_Rz8wrWEMqZsLVR7f5dNFoyzU"/>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Neon Horizon</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Synth Wave Collective</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="h-32 rounded-xl bg-gradient-to-br from-primary-container/20 to-transparent border border-outline-variant/20 p-4">
+<p class="font-label-md text-label-md text-primary">New Releases</p>
+</div>
+<div class="h-32 rounded-xl bg-gradient-to-br from-tertiary-container/20 to-transparent border border-outline-variant/20 p-4">
+<p class="font-label-md text-label-md text-tertiary">Trending</p>
+</div>
+</div>
+</main>
+</div>
+<!-- Bottom Sheet Backdrop -->
+<div class="fixed inset-0 bg-surface-container-lowest/80 backdrop-blur-sm z-[60] opacity-0 pointer-events-none transition-opacity duration-300" id="backdrop" onclick="toggleBottomSheet()"></div>
+<!-- Song Options Bottom Sheet -->
+<div class="fixed bottom-0 left-0 w-full z-[70] translate-y-full bottom-sheet-transition" id="bottom-sheet">
+<div class="bg-surface/90 backdrop-blur-2xl border-t border-outline-variant/20 rounded-t-[2.5rem] shadow-2xl flex flex-col max-h-[795px]">
+<!-- Handle -->
+<div class="w-full flex justify-center pt-4 pb-2">
+<div class="w-12 h-1.5 bg-outline-variant/30 rounded-full"></div>
+</div>
+<!-- Header: Song Info -->
+<div class="px-6 py-6 border-b border-outline-variant/10 flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl overflow-hidden shadow-lg shadow-primary/10">
+<img class="w-full h-full object-cover" data-alt="Vibrant close-up of a futuristic music album cover with abstract geometric forms and deep oceanic blue gradients. The visual style is high-contrast and punchy, representing a modern digital-first media experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBz7V78q3h64gzccMulshiZc4wdXEL_ZteF9hU62mNhEF99Ge56lzsNBN7nVC07vwulAU09xnGmuXNDl4bima-iqaz2ZLhjraOVaBShxavbfGrJQhQoYUeVW-ddhxgefrGGUhmoZ_5U3GswsiYIs-v5ScF5wN83URQVTL_ClX5CRFViYTFdkpN7S4kvrWFjGwP_rRSgfMLGrr-ivWb26XxsVdvKDB8BfAtcdy03Ej3NgXO1OeQJOzM5xzDypRug-5LRf2NPMlD9LRQ"/>
+</div>
+<div class="flex-1 overflow-hidden">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface truncate">Neon Horizon</h3>
+<p class="font-body-md text-body-md text-on-surface-variant truncate">Synth Wave Collective</p>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-high text-on-surface active-scale" onclick="toggleBottomSheet()">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Menu Options -->
+<div class="px-2 py-4 overflow-y-auto pb-10">
+<div class="grid gap-1">
+<!-- Option: Play Next -->
+<button class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl hover:bg-primary/10 group transition-all duration-200 active-scale">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-container/20 group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="playlist_play">playlist_play</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface text-left flex-1">Play Next</span>
+</button>
+<!-- Option: Add to Queue -->
+<button class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl hover:bg-primary/10 group transition-all duration-200 active-scale">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-container/20 group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="queue_music">queue_music</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface text-left flex-1">Add to Queue</span>
+</button>
+<!-- Option: Add to Playlist -->
+<button class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl hover:bg-primary/10 group transition-all duration-200 active-scale">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-container/20 group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="add_box">add_box</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface text-left flex-1">Add to Playlist</span>
+</button>
+<!-- Option: Download -->
+<button class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl hover:bg-primary/10 group transition-all duration-200 active-scale">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-container/20 group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="download">download</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface text-left flex-1">Download</span>
+<span class="px-2 py-0.5 rounded bg-primary-container text-[10px] font-bold text-on-primary-container tracking-wider">PRO</span>
+</button>
+<!-- Divider -->
+<div class="h-px bg-outline-variant/10 mx-6 my-2"></div>
+<!-- Option: Go to Artist -->
+<button class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl hover:bg-primary/10 group transition-all duration-200 active-scale">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-container/20 group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="artist">artist</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface text-left flex-1">Go to Artist</span>
+</button>
+<!-- Option: Share -->
+<button class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl hover:bg-primary/10 group transition-all duration-200 active-scale">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-container/20 group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="share">share</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface text-left flex-1">Share</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar (Predicted Component) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center pt-4 pb-6 px-4 bg-surface/90 backdrop-blur-2xl border-t border-outline-variant/5 shadow-xl rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 cursor-pointer">
+<span class="material-symbols-outlined mb-1" data-icon="search">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mb-1" data-icon="library_music">library_music</span>
+<span class="font-label-sm text-label-sm">Library</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</nav>
+<script>
+        function toggleBottomSheet() {
+            const sheet = document.getElementById('bottom-sheet');
+            const backdrop = document.getElementById('backdrop');
+            const isOpen = sheet.classList.contains('translate-y-0');
+
+            if (isOpen) {
+                sheet.classList.remove('translate-y-0');
+                sheet.classList.add('translate-y-full');
+                backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+                backdrop.classList.add('opacity-0', 'pointer-events-none');
+                document.body.style.overflow = '';
+            } else {
+                sheet.classList.remove('translate-y-full');
+                sheet.classList.add('translate-y-0');
+                backdrop.classList.remove('opacity-0', 'pointer-events-none');
+                backdrop.classList.add('opacity-100', 'pointer-events-auto');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // Initialize state
+        window.addEventListener('load', () => {
+            // Automatically show for demo purposes
+            setTimeout(toggleBottomSheet, 1000);
+        });
+    </script>
+</body></html>

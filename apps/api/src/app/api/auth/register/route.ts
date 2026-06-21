@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       createdAt: user.createdAt,
     };
 
-    return successResponse(userProfile, "Registration successful", 21);
+    return successResponse(userProfile, "Registration successful", 201);
   } catch (error: any) {
     return errorResponse(error.message || "Internal server error", 500);
   }

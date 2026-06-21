@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     }
 
     const category = await Category.create(parsed.data);
-    return successResponse(category, "Category created successfully", 21);
+    return successResponse(category, "Category created successfully", 201);
   } catch (error: any) {
     return errorResponse(error.message || "Internal server error", 500);
   }

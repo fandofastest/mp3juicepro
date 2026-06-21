@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Profile - Mp3 Juices</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "background": "#0c141e",
+                    "tertiary-container": "#005db9",
+                    "surface-variant": "#2d3541",
+                    "on-surface": "#dbe3f2",
+                    "error-container": "#93000a",
+                    "on-surface-variant": "#c2c6d4",
+                    "secondary-fixed-dim": "#cbc6b8",
+                    "surface-container": "#18202b",
+                    "primary-fixed-dim": "#abc7ff",
+                    "tertiary": "#aac7ff",
+                    "on-tertiary-fixed": "#001b3e",
+                    "inverse-on-surface": "#29313c",
+                    "on-primary-fixed-variant": "#004590",
+                    "tertiary-fixed": "#d6e3ff",
+                    "surface-container-high": "#232a35",
+                    "on-background": "#dbe3f2",
+                    "secondary-container": "#4a473c",
+                    "tertiary-fixed-dim": "#aac7ff",
+                    "on-tertiary": "#002f64",
+                    "on-error-container": "#ffdad6",
+                    "primary-container": "#0d5cb9",
+                    "on-tertiary-fixed-variant": "#00458d",
+                    "on-tertiary-container": "#c7d9ff",
+                    "inverse-surface": "#dbe3f2",
+                    "surface-container-low": "#141c26",
+                    "surface": "#0c141e",
+                    "on-secondary-fixed": "#1d1c13",
+                    "surface-container-highest": "#2d3541",
+                    "surface-bright": "#323a45",
+                    "surface-container-lowest": "#070f19",
+                    "primary": "#abc7ff",
+                    "on-primary-container": "#c8d9ff",
+                    "on-primary": "#002f66",
+                    "outline": "#8c909e",
+                    "surface-tint": "#abc7ff",
+                    "on-secondary-container": "#bab5a7",
+                    "primary-fixed": "#d7e2ff",
+                    "on-error": "#690005",
+                    "surface-dim": "#0c141e",
+                    "inverse-primary": "#0d5cb9",
+                    "on-secondary": "#333027",
+                    "on-secondary-fixed-variant": "#4a473c",
+                    "secondary-fixed": "#e8e2d3",
+                    "on-primary-fixed": "#001b3f",
+                    "outline-variant": "#424752",
+                    "secondary": "#cbc6b8",
+                    "error": "#ffb4ab"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-page": "2rem",
+                    "stack-lg": "2rem",
+                    "stack-sm": "0.5rem",
+                    "stack-md": "1rem",
+                    "gutter-grid": "1.5rem",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Montserrat"],
+                    "label-md": ["Montserrat"],
+                    "body-sm": ["Montserrat"],
+                    "label-sm": ["Montserrat"],
+                    "body-md": ["Montserrat"],
+                    "headline-lg-mobile": ["Montserrat"],
+                    "headline-lg": ["Montserrat"]
+            },
+            "fontSize": {
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "14px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0c141e;
+            color: #dbe3f2;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(24, 32, 43, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(171, 199, 255, 0.1);
+        }
+        .active-nav-glow {
+            box-shadow: 0 0 15px rgba(13, 92, 185, 0.3);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="font-body-md text-body-md antialiased pb-24">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-outline-variant/10 flex justify-between items-center px-6 py-4">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tighter">Mp3 Juices</h1>
+<button class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-opacity">settings</button>
+</header>
+<main class="pt-20 px-4 space-y-8">
+<!-- User Header Section -->
+<section class="flex flex-col items-center text-center space-y-4 py-4">
+<div class="relative">
+<div class="w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-primary to-tertiary">
+<img class="w-full h-full object-cover rounded-full border-4 border-background" data-alt="A professional and stylish portrait of a young music enthusiast with a cinematic aesthetic. The lighting is dramatic with deep blues and soft neon blue rim lights, reflecting the high-energy Mp3 Juices brand. The character has a modern haircut and is wearing sleek, dark tech-wear. The background is a soft-focus urban digital environment with subtle light trails." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC55dD4eqy4ObXiMhHylhdF0FwaHP6IN5qYtS9PV0YZ7EfpYpQihX99g9GoIbC6puvh8f2pqRekjIgKoWt97LJGKT1mgOeWFiDjju0YMn_SLKYodyOiNOlPH5fIzGHzk4hX5OiAL4K2ZphvJF3XIGgdcX7C9z100lJQGStEQ2Z5cSQ7RozjUfZsjSogFsSc1DI7mSM3UhfPFJkhJ0PRnQxC00lpiHbcFGTfoX6S2-cwCBc0BI9wiHrlfds8P5zSPZj6fjPim6tSx10"/>
+</div>
+<div class="absolute bottom-1 right-1 bg-primary text-on-primary rounded-full p-1 border-2 border-background">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="space-y-1">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Alex Rivera</h2>
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-secondary-container text-secondary text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[14px] mr-1" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                    Mp3 Juices Premium
+                </div>
+</div>
+</section>
+<!-- Stats Grid (Bento Style) -->
+<section class="grid grid-cols-3 gap-3">
+<div class="glass-card p-4 rounded-xl flex flex-col items-center justify-center space-y-1">
+<span class="font-headline-lg-mobile text-primary">128</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Following</span>
+</div>
+<div class="glass-card p-4 rounded-xl flex flex-col items-center justify-center space-y-1">
+<span class="font-headline-lg-mobile text-primary">2.4k</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Followers</span>
+</div>
+<div class="glass-card p-4 rounded-xl flex flex-col items-center justify-center space-y-1">
+<span class="font-headline-lg-mobile text-primary">15</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Playlists</span>
+</div>
+</section>
+<!-- Premium Upsell / Banner -->
+<section class="relative overflow-hidden rounded-2xl bg-primary-container p-6 text-on-primary-container">
+
+<div class="relative z-10">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile mb-2">Upgrade to Ultra</h3>
+<p class="text-body-sm mb-4 opacity-90">Experience lossless audio quality and unlimited offline downloads without interruptions.</p>
+<button class="bg-secondary-fixed text-on-secondary-fixed px-6 py-2 rounded-full font-label-md text-label-md active:scale-95 transition-transform">Get Started</button>
+</div>
+</section>
+<!-- Settings List -->
+<section class="space-y-2">
+<h3 class="text-label-md font-label-md text-on-surface-variant px-2 pb-2">Account Settings</h3>
+<div class="glass-card rounded-2xl overflow-hidden divide-y divide-outline-variant/10">
+<!-- My Account -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-variant/20 transition-colors">
+<div class="flex items-center space-x-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<span class="font-label-md text-label-md">My Account</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+<!-- Downloads -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-variant/20 transition-colors">
+<div class="flex items-center space-x-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">download</span>
+</div>
+<span class="font-label-md text-label-md">Downloads</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-label-sm text-on-surface-variant">42 Tracks</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</button>
+<!-- Listening History -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-variant/20 transition-colors">
+<div class="flex items-center space-x-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">history</span>
+</div>
+<span class="font-label-md text-label-md">Listening History</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+<!-- Privacy -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-variant/20 transition-colors">
+<div class="flex items-center space-x-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">shield</span>
+</div>
+<span class="font-label-md text-label-md">Privacy</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+</div>
+<!-- Logout -->
+<div class="pt-4">
+<button class="w-full flex items-center justify-center space-x-2 p-4 text-error font-label-md text-label-md hover:bg-error-container/10 transition-colors rounded-xl border border-error/20">
+<span class="material-symbols-outlined">logout</span>
+<span>Log Out</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center pt-4 pb-8 px-4 bg-surface/90 backdrop-blur-2xl border-t border-outline-variant/5 rounded-t-xl shadow-xl">
+<!-- Home -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</button>
+<!-- Search -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</button>
+<!-- Library -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">library_music</span>
+<span class="font-label-sm text-label-sm">Library</span>
+</button>
+<!-- Profile (Active) -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active-nav-glow">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</button>
+</nav>
+<script>
+        // Simple micro-interaction for list items
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('touchstart', () => {
+                btn.style.transform = 'scale(0.98)';
+                btn.style.transition = 'transform 0.1s ease';
+            });
+            btn.addEventListener('touchend', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

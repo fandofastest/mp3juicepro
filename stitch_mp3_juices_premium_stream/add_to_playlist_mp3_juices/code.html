@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add to Playlist - Mp3 Juices</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#bab5a7",
+                        "surface": "#0c141e",
+                        "on-secondary": "#333027",
+                        "surface-container-high": "#232a35",
+                        "primary": "#abc7ff",
+                        "secondary-fixed": "#e8e2d3",
+                        "on-secondary-fixed": "#1d1c13",
+                        "inverse-surface": "#dbe3f2",
+                        "tertiary-container": "#005db9",
+                        "on-tertiary-fixed-variant": "#00458d",
+                        "secondary": "#cbc6b8",
+                        "on-primary-fixed": "#001b3f",
+                        "on-primary-fixed-variant": "#004590",
+                        "surface-bright": "#323a45",
+                        "surface-variant": "#2d3541",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed-dim": "#aac7ff",
+                        "background": "#0c141e",
+                        "outline": "#8c909e",
+                        "inverse-on-surface": "#29313c",
+                        "surface-container": "#18202b",
+                        "primary-fixed": "#d7e2ff",
+                        "surface-container-lowest": "#070f19",
+                        "surface-container-low": "#141c26",
+                        "tertiary-fixed": "#d6e3ff",
+                        "primary-container": "#0d5cb9",
+                        "on-background": "#dbe3f2",
+                        "surface-dim": "#0c141e",
+                        "primary-fixed-dim": "#abc7ff",
+                        "secondary-fixed-dim": "#cbc6b8",
+                        "on-tertiary-fixed": "#001b3e",
+                        "secondary-container": "#4a473c",
+                        "on-tertiary-container": "#c7d9ff",
+                        "inverse-primary": "#0d5cb9",
+                        "on-tertiary": "#002f64",
+                        "on-primary": "#002f66",
+                        "tertiary": "#aac7ff",
+                        "surface-tint": "#abc7ff",
+                        "on-error": "#690005",
+                        "on-surface": "#dbe3f2",
+                        "on-primary-container": "#c8d9ff",
+                        "outline-variant": "#424752",
+                        "on-surface-variant": "#c2c6d4",
+                        "on-secondary-fixed-variant": "#4a473c",
+                        "error-container": "#93000a",
+                        "surface-container-highest": "#2d3541",
+                        "on-error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-page": "2rem",
+                        "container-max": "1200px",
+                        "stack-sm": "0.5rem",
+                        "stack-lg": "2rem",
+                        "stack-md": "1rem",
+                        "gutter-grid": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Montserrat"],
+                        "body-sm": ["Montserrat"],
+                        "label-md": ["Montserrat"],
+                        "body-md": ["Montserrat"],
+                        "headline-lg": ["Montserrat"],
+                        "headline-xl": ["Montserrat"],
+                        "headline-lg-mobile": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "14px", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bottom-sheet-gradient {
+            background: linear-gradient(to bottom, transparent, rgba(12, 20, 30, 0.95));
+        }
+        .playlist-row:active {
+            transform: scale(0.98);
+        }
+        .blur-backdrop {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen overflow-hidden">
+<!-- Main Content Background (Mocking a music player or search page) -->
+<div class="relative w-full h-screen p-margin-page flex flex-col items-center justify-center opacity-40">
+
+<div class="max-w-md w-full space-y-6">
+<div class="aspect-square w-64 mx-auto rounded-xl overflow-hidden shadow-2xl">
+<img class="w-full h-full object-cover" data-alt="High-fidelity digital cover art for a synthwave music track. The scene features a futuristic car driving into a neon sunset over a grid landscape. The color palette is dominated by electric blues, deep purples, and vibrant magentas, reflecting a high-energy urban nightlife mood. Soft glowing effects and crisp digital vectors define the modern, immersive aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1v50mm42wo3RyrI89vzplxYed18LGJTuEU4ynG2tlX1cKV3UlVLK4Xhmo4otVaRxgt6LmHCbWlERKK1XQjTUz4WL4qUruJNWkvM8JSBnoU55AgSgcpg8JbAqVc26VcMGS2_6fRwuybeTIxiWPEcoKYAkPa2jWye1fwoV7qy9QQWvILxhiOrG-MO2q5UgbvQ12NkeDxixnlL-Q7x4HChVXE06a7ZvqcLCttnRoZNlJ0_vWdF43YMowkcKS9DdKs4BkIDRMJHEiZk4"/>
+</div>
+<div class="text-center">
+<h1 class="font-headline-lg text-headline-lg text-primary">Cyber City Nights</h1>
+<p class="font-body-md text-on-surface-variant">Vaporware Echoes</p>
+</div>
+</div>
+</div>
+<!-- Modal Backdrop -->
+<div class="fixed inset-0 bg-surface-container-lowest/80 backdrop-blur-sm z-[60] flex items-end md:items-center justify-center p-0 md:p-4" id="modal-overlay">
+<!-- Add to Playlist Dialog (Bottom Sheet / Modal) -->
+<div class="relative w-full md:max-w-md bg-surface-container-low md:rounded-3xl rounded-t-[2rem] shadow-2xl overflow-hidden transform transition-transform duration-300 ease-out translate-y-0 border border-outline-variant/10" id="dialog-container">
+<!-- Handle for mobile drag feel -->
+<div class="md:hidden flex justify-center pt-4">
+<div class="w-12 h-1.5 bg-outline-variant/30 rounded-full"></div>
+</div>
+<!-- Header -->
+<div class="px-6 pt-6 pb-4 flex justify-between items-center">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Add to Playlist</h2>
+<button class="p-2 rounded-full hover:bg-surface-variant transition-colors text-on-surface-variant" onclick="document.getElementById('modal-overlay').style.display='none'">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- New Playlist Action -->
+<div class="px-6 pb-4">
+<button class="w-full group flex items-center gap-4 p-3 rounded-2xl bg-primary-container text-on-primary-container font-label-md text-label-md hover:brightness-110 transition-all duration-200">
+<div class="w-12 h-12 rounded-xl bg-on-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</div>
+<span>Create New Playlist</span>
+</button>
+</div>
+<!-- Playlist List -->
+<div class="px-6 pb-12 md:pb-6 max-h-[530px] overflow-y-auto space-y-2 custom-scrollbar">
+<!-- Playlist Item 1 -->
+<button class="playlist-row w-full flex items-center gap-4 p-3 rounded-2xl hover:bg-surface-container-high transition-all group">
+<div class="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 shadow-lg border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="A small thumbnail grid for a music playlist, featuring four miniature album covers with abstract colorful designs. The themes include deep blue ocean waves, golden sunset gradients, and sharp geometric patterns in neon blue. The style is clean, modern, and high-impact, suitable for a digital music interface with a premium dark-mode feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeOPHKH4GYYTf45rnfi0iu4_K0ghohsHH4tlELpPT9b9JQdjA2B-i3hsfV3UTtxU650VJ1b5P0JKEg5XYPxd-2QdJBH4xoMG-bI9CznWQIjJ3eHhw49XNqqII1X011Y2JsuHRi6UHR8JjMMTfSnAS5zRwJ1lPHlD5NkrcCRE_j_u65kOetQ5_aE7vK5fKbghYjNTO4mD30BUa2otYVJtn9FwiGy8FwlQGyZwyi0mpG8PcK6hGxPRAKO-Sy_LEqsH3kWNk1dYiOW-4"/>
+</div>
+<div class="flex-grow text-left">
+<p class="font-label-md text-label-md text-on-surface group-hover:text-primary transition-colors">Daily Drive</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">124 songs</p>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant group-hover:border-primary flex items-center justify-center transition-colors">
+<div class="w-3 h-3 rounded-full bg-primary opacity-0 group-focus:opacity-100 transition-opacity"></div>
+</div>
+</button>
+<!-- Playlist Item 2 (Selected State) -->
+<button class="playlist-row w-full flex items-center gap-4 p-3 rounded-2xl bg-surface-variant/40 border border-primary/20 transition-all group">
+<div class="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 shadow-lg border border-primary/30">
+<img class="w-full h-full object-cover" data-alt="A minimalist playlist cover featuring a stylized glowing electric guitar in a dark studio setting. The lighting is dominated by a sharp Primary Blue neon outline, creating a high-contrast and energetic mood. The background is a textured deep charcoal, maintaining the urban and digital-first aesthetic of the brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFsdHsYwg_sEJgcR8LYHZj8bXNaDIWTKCIUAbsr8VEntT-oL_arS3_G-YZRuL6SnuY44VNb5Zgxjj6LkMkRBC4H8nwLpzaWdszJus-xpr7_Ev6FcUFpgd7cwtFPsLvNwVN_LmH5d13bI89mBBG91zgrLxgYrspBOOs80tyADUyPSQkdDax-Awj7dTDtVsjiHAV-tLbIgIV6eOLXyLvh_p4n-3bBrRy13YNt9r01LKe9OYlx3NjTQWceCVeg5VfO0jqqqCHZLLVg7g"/>
+</div>
+<div class="flex-grow text-left">
+<p class="font-label-md text-label-md text-primary">Late Night Vibes</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">42 songs</p>
+</div>
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center transition-colors shadow-[0_0_12px_rgba(13,92,185,0.5)]">
+<span class="material-symbols-outlined text-[16px] text-on-primary font-bold">check</span>
+</div>
+</button>
+<!-- Playlist Item 3 -->
+<button class="playlist-row w-full flex items-center gap-4 p-3 rounded-2xl hover:bg-surface-container-high transition-all group">
+<div class="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 shadow-lg border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="A vibrant digital art piece for a music playlist, showing a stylized speaker emitting colorful sonic waves in shades of blue and gold. The background is a clean, dark navy with subtle grain. The design is sleek and modern, aligning with a professional high-energy music application's visual language." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaSNYSsFiH_OWoU7_1E0pIoQnpfEJDs43Ix-PFchE4P-LB71i_9vYUTCDPw5tCnZX8T4E-n_yX7X5q1oa1O5zED-3jbH7SdFVrEptjBy1I0SWKxUsIVEIvv5gWxawRrawZaJia3t48Wmre6MWWuDxSnGKhXVa42B_bMN9a9nAHcber1o5cBP-SqXVhwH_PLsk4sVN60hKwvxqYZPAy6UTyGDb_Ag9ktg_Sc13Tp1n2NLfjsP1ccbXDFlfy68fQNX0iccg8bl5MKtc"/>
+</div>
+<div class="flex-grow text-left">
+<p class="font-label-md text-label-md text-on-surface group-hover:text-primary transition-colors">Gym Motivation</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">89 songs</p>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant group-hover:border-primary transition-colors"></div>
+</button>
+<!-- Playlist Item 4 -->
+<button class="playlist-row w-full flex items-center gap-4 p-3 rounded-2xl hover:bg-surface-container-high transition-all group">
+<div class="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 shadow-lg border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="An artistic playlist thumbnail featuring soft, blurred bokeh lights in warm amber and cool primary blue. The image evokes a calm, lo-fi study mood, perfectly integrated into a dark-themed music interface. The lighting is cinematic and high-contrast, focusing on a premium digital aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeaoL54NSntq4e3WZy6GQzk73p7zBGKcjkYBxs1Gcu0Zj52m1g0Q_9x495e7sUJBYVIcRpp23FYtQg3j5JI4I1LRCe2djZXdQaOQk4pEr82vS1C4b4r79GfV495YmEYnoYpkN5uXSeeUA9OcIP5ST5RfnX8uu6gGVMRlyOxopU0QtVAJdrNdj0vvnfeKQrKliH5tFJw3HIOdtAZBSC5kA6TDc9Sd9OJjRGKMT7K_SmKKZwg8IPMf6ep3drGSir26UMtuM5_2m9sGc"/>
+</div>
+<div class="flex-grow text-left">
+<p class="font-label-md text-label-md text-on-surface group-hover:text-primary transition-colors">Study Focus</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">215 songs</p>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant group-hover:border-primary transition-colors"></div>
+</button>
+<!-- Playlist Item 5 -->
+<button class="playlist-row w-full flex items-center gap-4 p-3 rounded-2xl hover:bg-surface-container-high transition-all group">
+<div class="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 shadow-lg border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="A crisp, high-impact playlist cover showing a digital representation of a vinyl record with blue light reflecting off its surface. The background is a deep, immersive black. The style is urban, technological, and bold, reflecting a modern music platform's brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9pbgjGb96PPr0dKnNfwCvVUYMyRJPIKPftDW6qo38Hy59Dib8BEfLy9eVfQDJ6K0myzD359pRua5WQxCBvqhFGTJfSrs9FhBUlsVx9OTu9i1AId1SbATMp3Cey5g26SAJzKhB9XHAhqv_AcvfW9q8lr3VVGlkFGFnxPbZy5UPKZOW_jsdzEdNhPgI2zT_jPJtnjLWs9Ff2PK7sPSgPdCj8HNPOHE2_yF7HZ4GnfwVS_xqWWux_52SY-n_xtjcJreCSm-i51qxLQI"/>
+</div>
+<div class="flex-grow text-left">
+<p class="font-label-md text-label-md text-on-surface group-hover:text-primary transition-colors">Hip Hop Classics</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">56 songs</p>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant group-hover:border-primary transition-colors"></div>
+</button>
+</div>
+<!-- Footer Action (Sticky for mobile) -->
+<div class="px-6 py-4 md:mb-2 flex gap-3 bg-surface-container-low">
+<button class="flex-1 py-3 px-4 rounded-full font-label-md text-label-md border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors" onclick="document.getElementById('modal-overlay').style.display='none'">
+                    Cancel
+                </button>
+<button class="flex-1 py-3 px-4 rounded-full font-label-md text-label-md bg-secondary text-on-secondary shadow-lg hover:opacity-90 transition-all active:scale-95">
+                    Add (1)
+                </button>
+</div>
+</div>
+</div>
+<!-- Header (Shared Component) -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-page py-4 bg-background/80 backdrop-blur-xl border-b border-outline-variant/10">
+<div class="flex items-center gap-3">
+<span class="font-headline-lg text-headline-lg text-primary tracking-tighter">Mp3 Juices</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-opacity cursor-pointer">settings</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant/20 flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+</div>
+</header>
+<!-- Bottom Nav (Shared Component) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center pt-4 pb-8 px-4 bg-surface/90 backdrop-blur-2xl border-t border-outline-variant/5 shadow-xl rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</div>
+<!-- Active Search Tab -->
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-6 py-1.5 transition-all shadow-[0_0_20px_rgba(13,92,185,0.3)]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-label-sm text-label-sm mt-1">Search</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined">library_music</span>
+<span class="font-label-sm text-label-sm mt-1">Library</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for the playlist rows
+        const rows = document.querySelectorAll('.playlist-row');
+        rows.forEach(row => {
+            row.addEventListener('click', () => {
+                // Clear previous selections (demo logic)
+                rows.forEach(r => {
+                    r.classList.remove('bg-surface-variant/40', 'border-primary/20');
+                    r.querySelector('p').classList.remove('text-primary');
+                    r.querySelector('p').classList.add('text-on-surface');
+                    const indicator = r.querySelector('.w-6.h-6');
+                    if(indicator.classList.contains('bg-primary')) {
+                         indicator.classList.remove('bg-primary', 'shadow-[0_0_12px_rgba(13,92,185,0.5)]');
+                         indicator.classList.add('border-2', 'border-outline-variant');
+                         indicator.innerHTML = '<div class="w-3 h-3 rounded-full bg-primary opacity-0 transition-opacity"></div>';
+                    }
+                });
+
+                // Set active state
+                row.classList.add('bg-surface-variant/40', 'border-primary/20');
+                const label = row.querySelector('p');
+                label.classList.remove('text-on-surface');
+                label.classList.add('text-primary');
+                
+                const indicator = row.querySelector('.w-6.h-6');
+                indicator.classList.remove('border-2', 'border-outline-variant');
+                indicator.classList.add('bg-primary', 'shadow-[0_0_12px_rgba(13,92,185,0.5)]');
+                indicator.innerHTML = '<span class="material-symbols-outlined text-[16px] text-on-primary font-bold">check</span>';
+            });
+        });
+    </script>
+</body></html>

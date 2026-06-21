@@ -71,6 +71,7 @@ export interface Category {
   color?: string;
   sortOrder: number;
   enabled: boolean;
+  tracks?: any[];
 }
 
 export const CategoryInputSchema = z.object({
@@ -82,6 +83,7 @@ export const CategoryInputSchema = z.object({
   color: z.string().optional(),
   sortOrder: z.number().default(0),
   enabled: z.boolean().default(true),
+  tracks: z.array(z.any()).default([]).optional(),
 });
 
 // Genre & Mood Lists
@@ -165,6 +167,7 @@ export interface HomeSection {
   enabled: boolean;
   provider: string;
   providerConfig?: Record<string, any>;
+  tracks?: any[];
 }
 
 export const HomeSectionInputSchema = z.object({
@@ -183,11 +186,13 @@ export const HomeSectionInputSchema = z.object({
   enabled: z.boolean().default(true),
   provider: z.string().default("local"),
   providerConfig: z.record(z.any()).optional(),
+  tracks: z.array(z.any()).optional(),
 });
 
 // Normalized Music Objects for Providers
 export interface NormalizedTrack {
   id: string;
+  vid?: string;
   title: string;
   artist: string;
   artistId?: string;
@@ -296,3 +301,67 @@ export interface ApiErrorResponse {
   message: string;
   errors?: any[];
 }
+
+// App Config Schema for Ads & AdMob per package name
+export interface AppConfig {
+  id: string;
+  packageName: string;
+  admob: {
+    appId?: string;
+    bannerAdUnitId?: string;
+    interstitialAdUnitId?: string;
+    rewardedAdUnitId?: string;
+    nativeAdUnitId?: string;
+  };
+  ads: {
+    bannerEnabled: boolean;
+    interstitialEnabled: boolean;
+    rewardedEnabled: boolean;
+    nativeEnabled: boolean;
+    interstitialInterval: number;
+    adProvider: "admob" | "applovin" | "none";
+  };
+  promoBanner?: {
+    enabled: boolean;
+    image?: string;
+    targetUrl?: string;
+  };
+  appUpdate?: {
+    forceUpdate: boolean;
+    minimumVersion?: string;
+    updateUrl?: string;
+  };
+  safeMode: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export const AppConfigInputSchema = z.object({
+  packageName: z.string().min(3),
+  admob: z.object({
+    appId: z.string().optional(),
+    bannerAdUnitId: z.string().optional(),
+    interstitialAdUnitId: z.string().optional(),
+    rewardedAdUnitId: z.string().optional(),
+    nativeAdUnitId: z.string().optional(),
+  }).default({}),
+  ads: z.object({
+    bannerEnabled: z.boolean().default(false),
+    interstitialEnabled: z.boolean().default(false),
+    rewardedEnabled: z.boolean().default(false),
+    nativeEnabled: z.boolean().default(false),
+    interstitialInterval: z.number().default(5),
+    adProvider: z.enum(["admob", "applovin", "none"]).default("none"),
+  }).default({}),
+  promoBanner: z.object({
+    enabled: z.boolean().default(false),
+    image: z.string().optional(),
+    targetUrl: z.string().optional(),
+  }).default({}),
+  appUpdate: z.object({
+    forceUpdate: z.boolean().default(false),
+    minimumVersion: z.string().optional(),
+    updateUrl: z.string().optional(),
+  }).default({}),
+  safeMode: z.boolean().default(false),
+});

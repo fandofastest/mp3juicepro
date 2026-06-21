@@ -5,7 +5,7 @@ import Link from "next/navigation";
 import { usePathname } from "next/navigation";
 import { 
   Music, LayoutDashboard, Sliders, FolderHeart, Image, Database, 
-  Settings, LogOut, User as UserIcon, ListMusic, Menu
+  Settings, LogOut, User as UserIcon, ListMusic, Menu, Smartphone
 } from "lucide-react";
 import { useState } from "react";
 import "./globals.css";
@@ -17,9 +17,12 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
 
   const menuItems = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard },
+    { name: "Users Directory", href: "/users", icon: UserIcon },
+    { name: "Music Tracks", href: "/tracks", icon: Music },
     { name: "Home Builder", href: "/builder", icon: Sliders },
     { name: "Categories", href: "/categories", icon: FolderHeart },
     { name: "Banners", href: "/banners", icon: Image },
+    { name: "App Configurations", href: "/app-config", icon: Smartphone },
     { name: "Cache Manager", href: "/cache", icon: Database },
     { name: "System Settings", href: "/settings", icon: Settings },
   ];

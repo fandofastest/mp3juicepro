@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mp3 Juices - Library</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#001b3e",
+                    "on-surface": "#dbe3f2",
+                    "on-secondary-fixed": "#1d1c13",
+                    "surface-bright": "#323a45",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed": "#d6e3ff",
+                    "on-tertiary-container": "#c7d9ff",
+                    "tertiary-fixed-dim": "#aac7ff",
+                    "surface": "#0c141e",
+                    "on-primary-fixed": "#001b3f",
+                    "surface-container-high": "#232a35",
+                    "primary": "#abc7ff",
+                    "on-tertiary": "#002f64",
+                    "on-tertiary-fixed-variant": "#00458d",
+                    "primary-container": "#0d5cb9",
+                    "on-error": "#690005",
+                    "inverse-surface": "#dbe3f2",
+                    "on-secondary": "#333027",
+                    "surface-container-lowest": "#070f19",
+                    "secondary": "#cbc6b8",
+                    "surface-tint": "#abc7ff",
+                    "secondary-fixed": "#e8e2d3",
+                    "surface-container-low": "#141c26",
+                    "error-container": "#93000a",
+                    "on-surface-variant": "#c2c6d4",
+                    "primary-fixed": "#d7e2ff",
+                    "on-secondary-fixed-variant": "#4a473c",
+                    "tertiary": "#aac7ff",
+                    "secondary-container": "#4a473c",
+                    "on-secondary-container": "#bab5a7",
+                    "background": "#0c141e",
+                    "surface-variant": "#2d3541",
+                    "on-primary-fixed-variant": "#004590",
+                    "on-error-container": "#ffdad6",
+                    "primary-fixed-dim": "#abc7ff",
+                    "inverse-on-surface": "#29313c",
+                    "surface-container": "#18202b",
+                    "inverse-primary": "#0d5cb9",
+                    "tertiary-container": "#005db9",
+                    "outline": "#8c909e",
+                    "on-background": "#dbe3f2",
+                    "surface-container-highest": "#2d3541",
+                    "secondary-fixed-dim": "#cbc6b8",
+                    "outline-variant": "#424752",
+                    "on-primary-container": "#c8d9ff",
+                    "surface-dim": "#0c141e",
+                    "on-primary": "#002f66"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-page": "2rem",
+                    "gutter-grid": "1.5rem",
+                    "stack-sm": "0.5rem",
+                    "container-max": "1200px",
+                    "stack-md": "1rem",
+                    "stack-lg": "2rem"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Montserrat"],
+                    "label-sm": ["Montserrat"],
+                    "headline-xl": ["Montserrat"],
+                    "body-md": ["Montserrat"],
+                    "body-sm": ["Montserrat"],
+                    "headline-lg": ["Montserrat"],
+                    "label-md": ["Montserrat"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "14px", "fontWeight": "500"}],
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0c141e;
+            color: #dbe3f2;
+            font-family: 'Montserrat', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-card {
+            background: rgba(24, 32, 43, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(171, 199, 255, 0.1);
+        }
+        .active-glow {
+            box-shadow: 0 0 20px rgba(13, 92, 185, 0.4);
+        }
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background selection:bg-primary/30">
+<!-- Top AppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-outline-variant/10 flex justify-between items-center px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A professional high-resolution close-up portrait of a modern digital nomad with neon blue rim lighting. The subject has a confident expression, set against a dark, tech-oriented background with soft bokeh circles. The color palette is dominated by deep navy and vibrant electric blue, reflecting a sleek and premium UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWwlAuNWd41T-y5EFDObt14LSR3z5358rYQwg3yamQxTpcEC2APLyvn0OlSRGTOLXll9uPdAq5SZIgZuDBXl784V84YckRW32u8qPOsTFRLpbWthDRU__2ICAuj4gIMhsmyS9hPq0TP1pLxiZ2RypH8DfQzFe73_XaXCiBqSSZHEeCveumY_xbdXO3VrDTk__hgrV8Jh0uncotZwP5JTTJWS1wMGXEhMw--ek3ZyE36mtnl8lPUZ25TE_rcH5jY38mKQeAsbW4SWQ"/>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tighter">Mp3 Juices</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary text-2xl">settings</span>
+</button>
+</header>
+<main class="pt-24 pb-32 px-4 max-w-container-max mx-auto">
+<!-- Filter Chips -->
+<div class="flex gap-2 overflow-x-auto pb-6 -mx-4 px-4 scroll-smooth">
+<button class="px-5 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md whitespace-nowrap active:scale-95 transition-transform">Playlists</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface-variant font-label-md text-label-md whitespace-nowrap active:scale-95 transition-transform border border-outline-variant/20">Songs</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface-variant font-label-md text-label-md whitespace-nowrap active:scale-95 transition-transform border border-outline-variant/20">Albums</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface-variant font-label-md text-label-md whitespace-nowrap active:scale-95 transition-transform border border-outline-variant/20">Artists</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface-variant font-label-md text-label-md whitespace-nowrap active:scale-95 transition-transform border border-outline-variant/20">Downloads</button>
+</div>
+<!-- Liked Songs Hero Card -->
+<div class="mb-8 group">
+<div class="relative w-full aspect-[21/9] rounded-2xl overflow-hidden glass-card p-6 flex items-end transition-all duration-300 hover:border-primary/40 active:scale-[0.98]">
+<div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[120px] text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div class="relative z-10 flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl bg-primary-container flex items-center justify-center active-glow">
+<span class="material-symbols-outlined text-on-primary-container text-4xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Liked Songs</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Auto-playlist • 1,248 tracks</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Your Playlists Section -->
+<section class="mb-10">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Your Playlists</h3>
+<button class="text-primary font-label-md text-label-md hover:underline">See all</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Playlist 1 -->
+<div class="group cursor-pointer">
+<div class="aspect-square rounded-xl overflow-hidden mb-3 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A moody, atmospheric image of a rainy city street at night illuminated by neon purple and blue signs. The scene is shot with a shallow depth of field, focusing on blurry reflections in a puddle. The aesthetic is futuristic, cinematic, and perfectly captures the high-energy urban personality of the Mp3 Juices brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCv_rTnysgPlVbsbndDgK1oDEZerEpReByiMoSVR7mM5AlT9OkA6NmWt77SWCXDiKpWI0nvtEiGJTKMgfpfbzW6kSE0TkCWsSi51j6fF6ZAnEVKYG1tJGQSUXpVutp3xlapfJBDTwbJ_nH368U0ckWf_JM-bH9jvQfrqbzYNsjko6HPm-noxtF74lRtKU_gUAF_wr0OZMiDJihlVSIlrSs6m2Bk-inSg0cyXJlJZAK2WUMBNX_Cxoudj9CiQN2pqlVsfcVN3P8FxFM"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-white text-5xl" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<p class="font-label-md text-label-md text-on-surface truncate">Late Night Phonk</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Playlist • 42 songs</p>
+</div>
+<!-- Playlist 2 -->
+<div class="group cursor-pointer">
+<div class="aspect-square rounded-xl overflow-hidden mb-3 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A clean, minimalist workspace with a sleek laptop and high-end headphones on a wooden desk. Soft morning sunlight filters through a window, creating a serene and focused mood. The color palette features warm wood tones contrasted with cool metallic blues, maintaining the refined modern structure of the design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqhuNykUbPdySCUdjiLwfUb-zRPilhzBkQGIoUq-ijvIcB_jS8xMT_5-S6O3Kgufuhjaa8scyVZrNxWK6cSJwT6Ad4VlLcCzma7LT8pruNixhNQapzfp0Spo_MqQNbId19PijJKHP08api8je6TjInbs4JFS-gQpQMQ3p_qDuIWZ0NystJSRBoSNhwHMkbpL29vKvu7cURTtYtAUnKAvL__VNI_vv76tUS8LkFRXN-zZlb4AVjn0803uEP9D12Mgo6jxI1slhh1-Q"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-white text-5xl" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<p class="font-label-md text-label-md text-on-surface truncate">Focus Flow</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Playlist • 85 songs</p>
+</div>
+<!-- Playlist 3 -->
+<div class="group cursor-pointer">
+<div class="aspect-square rounded-xl overflow-hidden mb-3 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A dynamic digital artwork featuring abstract flowing energy waves in electric blue and vibrant cyan. The composition is fluid and juicy, with sharp highlights that simulate glowing light emission. This image serves as a visual representation of high-impact media and search, fitting perfectly with the digital-native target audience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxYFbK1VAy0LI3qymMHs4q1TpZ0lxlHlQbajUaxEimNwOFTviHNiwwClXRzP2-IDPFZSZY8Idi0zqp6PcFBOBmWaxj8wPoorLcar0jZXJLd6FtOdGLbUoVgQGFqGf657VG_cghGaDcTzqyoaJ0oijbNh3e-v39fKPRyl4gSqf0OZ7nmo15lfAG_quZqY7PFSlJqvlzwyv99nbOnUxGk9ez9FbnyezmAzdqqEFAy57hP5GHLWKJWfVRoGKsjQ6Bl-EawmuL1M1WufA"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-white text-5xl" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<p class="font-label-md text-label-md text-on-surface truncate">Energy Boost</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Playlist • 31 songs</p>
+</div>
+<!-- Playlist 4 -->
+<div class="group cursor-pointer">
+<div class="aspect-square rounded-xl overflow-hidden mb-3 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A dark, immersive studio background with a professional condenser microphone in sharp focus. Subtle blue backlighting outlines the silhouette of the gear, creating a high-contrast, bold aesthetic. The mood is creative and premium, aligning with the musical content of a library screen." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3wVSqlOPiluMtEaai7D2TllC7qGRPLpYIQO6zpirUBB187L7hlwDoqPM6nEsEZbvhVYPeahcLPISEBJRoXGr9c9GUrPMc-WrAK8UED_L8dmDLTnINitwHCtdlNClmvc38ZNuvYBEnuuI_w544VNz0la-tRgsyHcaeoD1Wbf15tnQsarjbLIRv6AupcIPWG7zr_fxLxYwubiXMBn7hCX8MhnAcVJ5iRYOPZRIeZaUbe6Ub59ym4kNQT58DMBQ9ufPxCPjNFcPbuu8"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-white text-5xl" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<p class="font-label-md text-label-md text-on-surface truncate">Vocal Chill</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Playlist • 12 songs</p>
+</div>
+</div>
+</section>
+<!-- Recent Activity / Downloads Section -->
+<section>
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Recently Added</h3>
+<button class="text-primary font-label-md text-label-md hover:underline">Sort</button>
+</div>
+<div class="space-y-4">
+<!-- Track 1 -->
+<div class="flex items-center gap-4 p-2 rounded-xl hover:bg-surface-container-high transition-colors group cursor-pointer">
+<div class="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="A cinematic close-up of a futuristic turntable with glowing blue light strips. The design is sleek, urban, and high-tech, reflecting the digital-first experience of the app. Intense primary blue accents stand out against the deep neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7gg9v-uam4aD8RFoSsjj3BHZZnxxMNvf7sQM-h6hhMvc51Lws8Vx_LegBeUCbCvd8hGfVEazzSXjS9s5PB6bykDchHEq0zr5GV6jhcTixGHhOR5_MT9ohJgNXQGRqoDk8_rnb66zKbuLtrssfFyKLqyjFIYXgVhdj2vfnC1CULQtZC4DVwcEKhpXx0acEbliQ7D8MxYy-0Nrj1lBo_gc6iwiNDIU-bKlpukUUm8vsnB_ITz9O9EnJ7M_erFNGY-oaVBIPvZ-1Nfc"/>
+<span class="material-symbols-outlined absolute inset-0 flex items-center justify-center bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity">play_arrow</span>
+</div>
+<div class="flex-grow min-w-0">
+<h4 class="font-label-md text-label-md text-on-surface truncate">After Hours (Remix)</h4>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">download_done</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">The Weeknd • 4.2M views</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<!-- Track 2 -->
+<div class="flex items-center gap-4 p-2 rounded-xl hover:bg-surface-container-high transition-colors group cursor-pointer">
+<div class="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="An abstract visualization of sound waves in electric blue, glowing against a deep black void. The lines are sharp and precise, representing the speed and visual clarity of the search experience. The lighting is high-contrast, giving the scene a punchy, energetic feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf3hGlfbQIGFNym8SZvWgLuE-s00ZLvfBmJZQICZVQBwy7896o60I6-xNoOJzSv60epw_jwbAbnKspVfB9YgQzDihbtyO8cjFAqoY6KsLcQ5KH_RkcnyQmTsyNl-VFBQdL-HNe9y_mrbsI4OSkOezNzs_i7qGDTRNHOMVZ3S78iHCgVFczpAnpvnSjb5ipkBZhlqPJh7430D55jlDuC_nvtCN3K4W8LdasekNCoo7bjIViNunasCngVKVdJ1H-Tn6r01cz5Z7CqpU"/>
+<span class="material-symbols-outlined absolute inset-0 flex items-center justify-center bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity">play_arrow</span>
+</div>
+<div class="flex-grow min-w-0">
+<h4 class="font-label-md text-label-md text-on-surface truncate">Levitating (ft. DaBaby)</h4>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">download_done</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Dua Lipa • 850K views</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<!-- Track 3 -->
+<div class="flex items-center gap-4 p-2 rounded-xl hover:bg-surface-container-high transition-colors group cursor-pointer">
+<div class="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="A stylized digital landscape with a massive glowing sun on the horizon, cast in shades of deep indigo and cyan. The aesthetic is vaporwave-inspired but modernized with high-definition textures and glassmorphic overlays. The mood is serene yet high-impact, matching the app's immersive background strategy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8q6vJJbufOVFE92sC85YiawsD9yOLw6Z5Nr0_i723LGjkLzClUL9WNXNtQS1iAFQeIDVIq4SIV83eDOj1lxNDUyjTbIfywZ2nEWDVyFsX2UvfNBHVieD0KZK_6mCNHE4ypjg4VLLU5L3l34AAdT8a8Hq46rBsgtBFdgls5DKCvWEyB03yZMwVKIKjOONmQnoxp4ctObbSTmwpcX6WzCMMR5EWRqp36LdzSi7OcOJOQn2Rs4mV1hZpSlMn_1y6v10dKZR5cMBKcQg"/>
+<span class="material-symbols-outlined absolute inset-0 flex items-center justify-center bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity">play_arrow</span>
+</div>
+<div class="flex-grow min-w-0">
+<h4 class="font-label-md text-label-md text-on-surface truncate">Midnight City</h4>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">download_done</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">M83 • 1.1M views</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface/90 backdrop-blur-2xl border-t border-outline-variant/5 shadow-xl flex justify-around items-center pt-4 pb-8 px-4 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</a>
+<!-- ACTIVE TAB: Library -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-6 py-2 shadow-lg active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined mb-0.5" style="font-variation-settings: 'FILL' 1;">library_music</span>
+<span class="font-label-sm text-label-sm">Library</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for filter chips
+        const chips = document.querySelectorAll('button');
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => {
+                    c.classList.remove('bg-primary', 'text-on-primary');
+                    c.classList.add('bg-surface-container-highest', 'text-on-surface-variant');
+                });
+                chip.classList.add('bg-primary', 'text-on-primary');
+                chip.classList.remove('bg-surface-container-highest', 'text-on-surface-variant');
+            });
+        });
+
+        // Simple parallax effect for playlist cards
+        document.addEventListener('mousemove', (e) => {
+            const amount = 10;
+            const x = (e.clientX / window.innerWidth - 0.5) * amount;
+            const y = (e.clientY / window.innerHeight - 0.5) * amount;
+            
+            document.querySelectorAll('.group:hover img').forEach(img => {
+                img.style.transform = `scale(1.1) translate(${x}px, ${y}px)`;
+            });
+        });
+    </script>
+</body></html>

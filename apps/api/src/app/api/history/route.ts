@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { initApi, successResponse, errorResponse, authenticateRequest } from "../../../lib/api-helper";
-import { History } from "@headless/database";
+import { History, SystemSettings } from "@headless/database";
+import { YoutubeMusicProvider } from "@headless/providers";
 
 export async function GET(req: NextRequest) {
   try {
@@ -26,23 +27,49 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { trackId, title, artist, album, cover, duration } = body;
+    const { trackId, vid } = body;
+    const activeTrackId = trackId || vid;
 
-    if (!trackId || !title || !artist || !cover || !duration) {
-      return errorResponse("Missing required fields", 400);
+    if (!activeTrackId) {
+      return errorResponse("YouTube video ID (trackId or vid) is required", 400);
+    }
+
+    // Default metadata placeholders
+    let title = "YouTube Video";
+    let artist = "Unknown Artist";
+    let cover = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=300";
+    let duration = 240;
+
+    // Resolve details using Google YouTube API
+    try {
+      const settings = await SystemSettings.findOne();
+      const apiKey = settings?.apiKeys?.get("youtube_api_key");
+      
+      if (apiKey) {
+        const yt = new YoutubeMusicProvider(apiKey);
+        const details = await yt.getTrack(activeTrackId);
+        if (details) {
+          title = details.title;
+          artist = details.artist;
+          cover = details.cover;
+          duration = details.duration;
+        }
+      }
+    } catch (err) {
+      console.warn("Failed to fetch YouTube metadata, using placeholders:", err);
     }
 
     const historyEntry = await History.create({
       userId: userPayload.userId,
-      trackId,
+      vid: activeTrackId,
+      trackId: activeTrackId,
       title,
       artist,
-      album,
       cover,
       duration,
     });
 
-    return successResponse(historyEntry, "Listening history logged", 21);
+    return successResponse(historyEntry, "Listening history logged", 201);
   } catch (error: any) {
     return errorResponse(error.message || "Internal server error", 500);
   }

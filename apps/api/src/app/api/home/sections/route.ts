@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     }
 
     const section = await HomeSection.create(parsed.data);
-    return successResponse(section, "Home section created successfully", 21);
+    return successResponse(section, "Home section created successfully", 201);
   } catch (error: any) {
     return errorResponse(error.message || "Internal server error", 500);
   }

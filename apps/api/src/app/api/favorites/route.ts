@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
         type,
         targetId,
       });
-      return successResponse({ favorited: true, item: fav }, "Added to favorites", 21);
+      return successResponse({ favorited: true, item: fav }, "Added to favorites", 201);
     }
   } catch (error: any) {
     return errorResponse(error.message || "Internal server error", 500);

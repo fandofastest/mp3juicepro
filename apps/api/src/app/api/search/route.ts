@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { initApi, successResponse, errorResponse } from "../../../lib/api-helper";
 import { ProviderFactory } from "@headless/providers";
-import { AnalyticsEvent } from "@headless/database";
+import { AnalyticsEvent, SystemSettings } from "@headless/database";
 import { verifyAccessToken } from "@headless/auth";
 
 export async function GET(req: NextRequest) {
@@ -17,6 +17,18 @@ export async function GET(req: NextRequest) {
     }
 
     const provider = ProviderFactory.getProvider(providerName);
+
+    // Dynamically inject YouTube API Key from Settings database
+    if (providerName === "youtube") {
+      const settings = await SystemSettings.findOne();
+      if (settings && settings.apiKeys) {
+        const apiKey = settings.apiKeys.get("youtube_api_key");
+        if (apiKey && "setApiKey" in provider) {
+          (provider as any).setApiKey(apiKey);
+        }
+      }
+    }
+
     const results = await provider.search(query, limit);
 
     // Track search event in analytics asynchronously
