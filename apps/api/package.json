@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
-    "build": "next build",
+    "build": "npm run build --prefix ../.. --workspace=@headless/types --workspace=@headless/database --workspace=@headless/auth --workspace=@headless/providers --workspace=@headless/utils --if-present && next build",
     "start": "next start -p 3001"
   },
   "dependencies": {
