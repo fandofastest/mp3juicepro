@@ -8,6 +8,8 @@ import '../providers/auth_provider.dart';
 import 'category_detail_screen.dart';
 import 'all_categories_screen.dart';
 import '../widgets/song_options_sheet.dart';
+import '../services/ad_service.dart';
+import '../widgets/banner_ad_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onProfileTap;
@@ -34,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     
     // Fetch App Config
     final config = await ApiService.fetchAppConfig();
+    await AdService.instance.initialize(config);
     
     // Fetch Home Sections (pass token if user logged in)
     String? token;
@@ -253,6 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xff131313),
+      bottomNavigationBar: const BannerAdWidget(),
       appBar: AppBar(
         backgroundColor: const Color(0xff131313).withOpacity(0.8),
         elevation: 0,
@@ -635,6 +639,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 return GestureDetector(
                   onTap: () {
+                    AdService.instance.showInterstitialAdIfReady();
                     player.setPlaylist(items, index);
                   },
                   child: Container(
@@ -797,6 +802,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   onTap: () {
+                    AdService.instance.showInterstitialAdIfReady();
                     player.setPlaylist(items, index);
                   },
                 ),

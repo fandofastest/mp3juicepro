@@ -43,6 +43,8 @@ dependencies:
   path_provider: ^2.1.6
   just_audio_background: ^0.0.1-beta.17
   url_launcher: ^6.3.2
+  google_mobile_ads: ^5.1.0
+  applovin_max: ^3.10.0
 
 dev_dependencies:
   flutter_test:
