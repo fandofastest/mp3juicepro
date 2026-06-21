@@ -4,13 +4,14 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "node ../../node_modules/typescript/bin/tsc"
+    "build": "tsc"
   },
   "dependencies": {
     "@headless/types": "*",
     "@headless/utils": "*",
     "jsonwebtoken": "^9.0.2",
-    "bcrypt": "^5.1.1"
+    "bcrypt": "^5.1.1",
+    "typescript": "^5.5.4"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.6",

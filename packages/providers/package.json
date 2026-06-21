@@ -4,11 +4,12 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "node ../../node_modules/typescript/bin/tsc"
+    "build": "tsc"
   },
   "dependencies": {
     "@headless/types": "*",
     "@headless/utils": "*",
-    "@headless/database": "*"
+    "@headless/database": "*",
+    "typescript": "^5.5.4"
   }
 }
