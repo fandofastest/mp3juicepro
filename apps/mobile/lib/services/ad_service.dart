@@ -28,14 +28,28 @@ class AdService {
   Future<void> initialize(Map<String, dynamic> config) async {
     final adsConf = config['ads'] ?? {};
     _provider = adsConf['adProvider'] ?? 'none';
-    _bannerEnabled = adsConf['bannerEnabled'] ?? false;
-    _interstitialEnabled = adsConf['interstitialEnabled'] ?? false;
-    _rewardedEnabled = adsConf['rewardedEnabled'] ?? false;
-    _nativeEnabled = adsConf['nativeEnabled'] ?? false;
-    _interstitialInterval = adsConf['interstitialInterval'] ?? 5;
 
-    _admobKeys = config['admob'] ?? {};
-    _applovinKeys = config['applovin'] ?? {};
+    // Debug Fallback: If no provider is configured, force AdMob test ads so the user can verify the integration.
+    if (_provider == 'none') {
+      print('AdService: No active provider found. Enabling AdMob test ads fallback.');
+      _provider = 'admob';
+      _bannerEnabled = true;
+      _interstitialEnabled = true;
+      _interstitialInterval = 2; // Show on every 2nd click for easier verification
+      _admobKeys = {
+        'appId': 'ca-app-pub-3940256099942544~3347511713',
+        'bannerAdUnitId': 'ca-app-pub-3940256099942544/6300978111',
+        'interstitialAdUnitId': 'ca-app-pub-3940256099942544/1033173712',
+      };
+    } else {
+      _bannerEnabled = adsConf['bannerEnabled'] ?? false;
+      _interstitialEnabled = adsConf['interstitialEnabled'] ?? false;
+      _rewardedEnabled = adsConf['rewardedEnabled'] ?? false;
+      _nativeEnabled = adsConf['nativeEnabled'] ?? false;
+      _interstitialInterval = adsConf['interstitialInterval'] ?? 5;
+      _admobKeys = config['admob'] ?? {};
+      _applovinKeys = config['applovin'] ?? {};
+    }
 
     print('AdService Initializing with provider: $_provider');
 

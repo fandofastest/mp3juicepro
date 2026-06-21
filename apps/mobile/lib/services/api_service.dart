@@ -16,6 +16,7 @@ class ApiService {
       );
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        print('Fetched App Config Response: $data');
         if (data['success'] == true && data['data'] != null) {
           return data['data'] as Map<String, dynamic>;
         }
