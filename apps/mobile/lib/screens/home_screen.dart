@@ -256,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xff131313),
-      bottomNavigationBar: const BannerAdWidget(),
+      bottomNavigationBar: _isLoading ? null : const BannerAdWidget(),
       appBar: AppBar(
         backgroundColor: const Color(0xff131313).withOpacity(0.8),
         elevation: 0,
