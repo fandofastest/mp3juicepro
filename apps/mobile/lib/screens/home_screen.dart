@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/api_service.dart';
 import '../providers/player_provider.dart';
+import '../providers/auth_provider.dart';
+import 'category_detail_screen.dart';
+import 'all_categories_screen.dart';
+import '../widgets/song_options_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final VoidCallback onProfileTap;
+  const HomeScreen({super.key, required this.onProfileTap});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -13,9 +19,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic>? _appConfig;
-  List<dynamic> _categories = [];
-  Map<String, List<dynamic>> _categoryTracks = {};
+  List<dynamic> _homeSections = [];
   bool _isLoading = true;
+  static bool _promoShownThisSession = false;
 
   @override
   void initState() {
@@ -29,27 +35,216 @@ class _HomeScreenState extends State<HomeScreen> {
     // Fetch App Config
     final config = await ApiService.fetchAppConfig();
     
-    // Fetch Categories
-    final categories = await ApiService.fetchCategories();
-    
-    // Fetch tracks for top 3 categories
-    final Map<String, List<dynamic>> catTracks = {};
-    for (var cat in categories.take(3)) {
-      final slug = cat['slug'];
-      if (slug != null) {
-        final tracks = await ApiService.fetchCategoryTracks(slug);
-        catTracks[slug] = tracks;
-      }
+    // Fetch Home Sections (pass token if user logged in)
+    String? token;
+    if (mounted) {
+      final auth = Provider.of<AuthProvider>(context, listen: false);
+      token = auth.token;
     }
+    
+    final homeSections = await ApiService.fetchHomeSections(token);
 
     if (mounted) {
       setState(() {
         _appConfig = config;
-        _categories = categories;
-        _categoryTracks = catTracks;
+        _homeSections = homeSections;
         _isLoading = false;
       });
+      
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _checkForceUpdateAndPromo();
+      });
     }
+  }
+
+  void _checkForceUpdateAndPromo() {
+    if (_appConfig == null) return;
+
+    // 1. Force Update check
+    final appUpdate = _appConfig!['appUpdate'];
+    if (appUpdate != null && appUpdate['forceUpdate'] == true) {
+      final minVersion = appUpdate['minimumVersion'] ?? '1.0.0';
+      const currentVersion = '1.0.0'; // App constant version
+      
+      if (_isVersionOlderOrEqual(currentVersion, minVersion)) {
+        _showForceUpdateDialog(appUpdate['updateUrl'] ?? '');
+        return; // Halt and require update
+      }
+    }
+
+    // 2. Promo Dialog check
+    final promo = _appConfig!['promoBanner'];
+    if (promo != null && promo['enabled'] == true) {
+      if (!_promoShownThisSession) {
+        _promoShownThisSession = true;
+        _showPromoDialog(promo);
+      }
+    }
+  }
+
+  bool _isVersionOlderOrEqual(String current, String minimum) {
+    try {
+      final currentParts = current.split('.').map(int.parse).toList();
+      final minParts = minimum.split('.').map(int.parse).toList();
+      
+      for (int i = 0; i < 3; i++) {
+        final currentPart = i < currentParts.length ? currentParts[i] : 0;
+        final minPart = i < minParts.length ? minParts[i] : 0;
+        if (currentPart < minPart) return true;
+        if (currentPart > minPart) return false;
+      }
+      return true; // If equal, return true (forces update)
+    } catch (e) {
+      return current.compareTo(minimum) <= 0;
+    }
+  }
+
+  void _showForceUpdateDialog(String updateUrl) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            backgroundColor: const Color(0xff1c1b1b),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: const Row(
+              children: [
+                Icon(Icons.system_update_rounded, color: Color(0xff39ff14)),
+                SizedBox(width: 10),
+                Text('Update Required', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              ],
+            ),
+            content: const Text(
+              'A newer version of the application is available. Please update the app to continue using it.',
+              style: TextStyle(color: Colors.grey, fontSize: 14),
+            ),
+            actions: [
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final uri = Uri.parse(updateUrl);
+                    try {
+                      final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      if (!launched && context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Could not open Play Store/Browser"),
+                            backgroundColor: Colors.redAccent,
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Failed to open link: $e"),
+                            backgroundColor: Colors.redAccent,
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xff39ff14),
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  child: const Text('Update Now', style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showPromoDialog(dynamic promo) {
+    final imageUrl = promo['image'] ?? 'https://picsum.photos/500/500';
+    final targetUrl = promo['targetUrl'] ?? '';
+
+    showDialog(
+      context: context,
+      builder: (dialogCtx) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  Navigator.of(dialogCtx).pop();
+                  if (targetUrl.isNotEmpty) {
+                    final uri = Uri.parse(targetUrl);
+                    try {
+                      final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      if (!launched && context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Could not open URL"),
+                            backgroundColor: Colors.redAccent,
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Failed to open link: $e"),
+                            backgroundColor: Colors.redAccent,
+                          ),
+                        );
+                      }
+                    }
+                  }
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: const Color(0xff39ff14).withOpacity(0.3), width: 1.5),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(22),
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        height: 300,
+                        color: const Color(0xff1c1b1b),
+                        alignment: Alignment.center,
+                        child: const CircularProgressIndicator(color: Color(0xff39ff14)),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        height: 300,
+                        color: const Color(0xff1c1b1b),
+                        alignment: Alignment.center,
+                        child: const Icon(Icons.broken_image_rounded, color: Colors.grey, size: 50),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: IconButton(
+                  icon: const Icon(Icons.close_rounded, color: Colors.white, size: 28),
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.black54,
+                    shape: const CircleBorder(),
+                  ),
+                  onPressed: () => Navigator.of(dialogCtx).pop(),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -71,20 +266,19 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: Colors.white70),
-            onPressed: _loadData,
-          ),
-          Container(
-            margin: const EdgeInsets.only(right: 16),
-            width: 34,
-            height: 34,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xff39ff14), width: 1.5),
-            ),
-            child: const CircleAvatar(
-              backgroundImage: NetworkImage('https://i.pravatar.cc/100'),
+          GestureDetector(
+            onTap: widget.onProfileTap,
+            child: Container(
+              margin: const EdgeInsets.only(right: 16),
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xff39ff14), width: 1.5),
+              ),
+              child: const CircleAvatar(
+                backgroundImage: NetworkImage('https://i.pravatar.cc/100'),
+              ),
             ),
           )
         ],
@@ -214,143 +408,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
 
-                  // Dynamic Categories Lists
-                  if (_categories.isEmpty)
+                  // Render Home Builder Sections dynamically
+                  if (_homeSections.isEmpty)
                     const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 24.0),
+                      padding: EdgeInsets.symmetric(vertical: 40.0),
                       child: Center(
                         child: Text(
-                          'No categories found.',
+                          'No home sections configured yet.',
                           style: TextStyle(color: Colors.grey),
                         ),
                       ),
                     )
                   else
-                    ..._categories.take(3).map((cat) {
-                      final slug = cat['slug'] ?? '';
-                      final tracks = _categoryTracks[slug] ?? [];
-                      if (tracks.isEmpty) return const SizedBox.shrink();
+                    ..._homeSections.map((sec) => _buildSection(sec, player)),
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0, top: 12.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  cat['title'] ?? cat['name'] ?? 'Category',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: const Text(
-                                    'View All',
-                                    style: TextStyle(color: Color(0xff39ff14), fontSize: 12),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 200,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: tracks.length,
-                              itemBuilder: (context, index) {
-                                final track = tracks[index];
-                                return GestureDetector(
-                                  onTap: () {
-                                    player.setPlaylist(tracks, index);
-                                  },
-                                  child: Container(
-                                    width: 140,
-                                    margin: const EdgeInsets.only(right: 16),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xff1c1b1b).withOpacity(0.6),
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(color: Colors.white.withOpacity(0.04)),
-                                    ),
-                                    padding: const EdgeInsets.all(8),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        // Image Cover
-                                        Expanded(
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(12),
-                                            child: CachedNetworkImage(
-                                              imageUrl: track['cover'] ?? '',
-                                              width: double.infinity,
-                                              fit: BoxFit.cover,
-                                              placeholder: (context, url) => Container(color: Colors.grey[900]),
-                                              errorWidget: (context, url, error) => Container(color: Colors.grey[900]),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          track['title'] ?? 'Unknown Track',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          track['artist'] ?? 'Unknown Artist',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: Colors.grey[500],
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
-
-                  const SizedBox(height: 20),
-
-                  // Recent Playlists Bento
-                  const Text(
-                    'Recent Playlists',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  GridView.count(
-                    crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 1.5,
-                    children: [
-                      _buildPlaylistCard('Midnight Chill', 'https://picsum.photos/id/10/300/200', '24 Tracks'),
-                      _buildPlaylistCard('Deep House', 'https://picsum.photos/id/103/300/200', 'Selected Beats'),
-                      _buildPlaylistCard('Focus Flow', 'https://picsum.photos/id/180/300/200', 'Lofi Focus'),
-                      _buildPlaylistCard('Indie Pop', 'https://picsum.photos/id/45/300/200', 'New Finds'),
-                    ],
-                  ),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -358,40 +429,427 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildPlaylistCard(String title, String imageUrl, String subtitle) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xff1c1b1b).withOpacity(0.8),
-        borderRadius: BorderRadius.circular(16),
-        image: DecorationImage(
-          image: CachedNetworkImageProvider(imageUrl),
-          fit: BoxFit.cover,
-          opacity: 0.25,
+  Widget _buildSection(dynamic section, PlayerProvider player) {
+    final title = section['title'] ?? '';
+    final subtitle = section['subtitle'] ?? '';
+    final layout = section['layout'] ?? 'carousel';
+    final type = section['type'] ?? '';
+    var items = section['items'] as List<dynamic>? ?? [];
+    if (type == 'history' && items.isEmpty) {
+      items = player.history;
+    }
+
+    if (items.isEmpty) return const SizedBox.shrink();
+
+    // 1. Banner Layout
+    if (layout == 'banner' || type == 'banner') {
+      final banner = items[0];
+      return Container(
+        margin: const EdgeInsets.only(bottom: 24),
+        height: 140,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          image: DecorationImage(
+            image: CachedNetworkImageProvider(
+              banner['image'] ?? 'https://picsum.photos/800/400',
+            ),
+            fit: BoxFit.cover,
+          ),
         ),
-        border: Border.all(color: Colors.white.withOpacity(0.04)),
-      ),
-      padding: const EdgeInsets.all(12),
-      child: Column(
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            gradient: LinearGradient(
+              colors: [Colors.black.withOpacity(0.7), Colors.transparent],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            ),
+          ),
+          alignment: Alignment.bottomLeft,
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                banner['title'] ?? 'Featured Spotlight',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              if (banner['subtitle'] != null) ...[
+                const SizedBox(height: 4),
+                Text(
+                  banner['subtitle'],
+                  style: TextStyle(color: Colors.grey[300], fontSize: 11),
+                ),
+              ],
+            ],
+          ),
+        ),
+      );
+    }
+
+    // 2. Grid Layout
+    if (layout == 'grid') {
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
+          _buildSectionHeader(
             title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
             subtitle,
-            style: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 11,
+            onActionPressed: type == 'category' ? () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const AllCategoriesScreen()),
+              );
+            } : null,
+          ),
+          const SizedBox(height: 12),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: items.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 1.5,
+            ),
+            itemBuilder: (context, index) {
+              final item = items[index];
+              final itemTitle = item['title'] ?? item['name'] ?? 'Playlist';
+              final coverUrl = item['cover'] ?? 'https://picsum.photos/300/200';
+
+              return GestureDetector(
+                onTap: () {
+                  if (type == 'category') {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => CategoryDetailScreen(category: item),
+                      ),
+                    );
+                  }
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xff1c1b1b).withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(16),
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(coverUrl),
+                      fit: BoxFit.cover,
+                      opacity: 0.25,
+                    ),
+                    border: Border.all(color: Colors.white.withOpacity(0.04)),
+                  ),
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        itemTitle,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      if (item['color'] != null)
+                        Container(
+                          width: 12,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: Color(int.parse(item['color'].replaceAll('#', '0xff'))),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 24),
+        ],
+      );
+    }
+
+    // 3. Carousel Layout
+    if (layout == 'carousel' || type == 'featured' || type == 'recommendation') {
+      final isCategoryType = type == 'category';
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader(title, subtitle),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 200,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index];
+
+                if (isCategoryType) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => CategoryDetailScreen(category: item),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 140,
+                      margin: const EdgeInsets.only(right: 16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xff1c1b1b).withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.white.withOpacity(0.04)),
+                      ),
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.folder_open_rounded, color: Color(0xff39ff14), size: 40),
+                          const SizedBox(height: 12),
+                          Text(
+                            item['title'] ?? item['name'] ?? 'Category',
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
+                // Render track items
+                final track = item;
+                final vid = track['vid'] ?? track['id'] ?? '';
+                final isFav = player.isFavorite(vid);
+
+                return GestureDetector(
+                  onTap: () {
+                    player.setPlaylist(items, index);
+                  },
+                  child: Container(
+                    width: 140,
+                    margin: const EdgeInsets.only(right: 16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xff1c1b1b).withOpacity(0.6),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.white.withOpacity(0.04)),
+                    ),
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: CachedNetworkImage(
+                                    imageUrl: track['cover'] ?? '',
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => Container(color: Colors.grey[900]),
+                                    errorWidget: (context, url, error) => Container(color: Colors.grey[900]),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 4,
+                                right: 4,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      builder: (_) => SongOptionsSheet(track: track),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.6),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.more_vert_rounded,
+                                      color: Colors.white70,
+                                      size: 14,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          track['title'] ?? 'Unknown Track',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          track['artist'] ?? 'Unknown Artist',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
+          const SizedBox(height: 24),
         ],
-      ),
+      );
+    }
+
+    // 4. List Layout
+    if (layout == 'list' || type == 'history' || type == 'favorites') {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader(title, subtitle),
+          const SizedBox(height: 12),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final track = items[index];
+              final vid = track['vid'] ?? track['id'] ?? '';
+              final isFav = player.isFavorite(vid);
+
+              return Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: const Color(0xff1c1b1b).withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.white.withOpacity(0.02)),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: CachedNetworkImage(
+                      imageUrl: track['cover'] ?? '',
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(color: Colors.grey[900]),
+                      errorWidget: (context, url, error) => Container(color: Colors.grey[900]),
+                    ),
+                  ),
+                  title: Text(
+                    track['title'] ?? 'Unknown Track',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14),
+                  ),
+                  subtitle: Text(
+                    track['artist'] ?? 'Unknown Artist',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.more_vert_rounded,
+                          color: Colors.grey,
+                          size: 22,
+                        ),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (_) => SongOptionsSheet(track: track),
+                          );
+                        },
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.play_circle_fill_rounded, color: Color(0xff39ff14), size: 32),
+                    ],
+                  ),
+                  onTap: () {
+                    player.setPlaylist(items, index);
+                  },
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 24),
+        ],
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  Widget _buildSectionHeader(String title, String subtitle, {VoidCallback? onActionPressed}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              if (subtitle.isNotEmpty) ...[
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: Colors.grey[400],
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+        if (onActionPressed != null)
+          TextButton(
+            onPressed: onActionPressed,
+            child: const Text(
+              'View All',
+              style: TextStyle(color: Color(0xff39ff14), fontSize: 12),
+            ),
+          )
+      ],
     );
   }
 }

@@ -313,6 +313,13 @@ export interface AppConfig {
     rewardedAdUnitId?: string;
     nativeAdUnitId?: string;
   };
+  applovin: {
+    sdkKey?: string;
+    bannerAdUnitId?: string;
+    interstitialAdUnitId?: string;
+    rewardedAdUnitId?: string;
+    nativeAdUnitId?: string;
+  };
   ads: {
     bannerEnabled: boolean;
     interstitialEnabled: boolean;
@@ -340,6 +347,13 @@ export const AppConfigInputSchema = z.object({
   packageName: z.string().min(3),
   admob: z.object({
     appId: z.string().optional(),
+    bannerAdUnitId: z.string().optional(),
+    interstitialAdUnitId: z.string().optional(),
+    rewardedAdUnitId: z.string().optional(),
+    nativeAdUnitId: z.string().optional(),
+  }).default({}),
+  applovin: z.object({
+    sdkKey: z.string().optional(),
     bannerAdUnitId: z.string().optional(),
     interstitialAdUnitId: z.string().optional(),
     rewardedAdUnitId: z.string().optional(),

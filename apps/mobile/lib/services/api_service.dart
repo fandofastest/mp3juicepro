@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   static const String baseUrl = 'https://mp3juicepro-api.vercel.app/api';
-  static const String packageName = 'com.mp3juice.pro';
+  static const String packageName = 'com.mp3juice.mp3juicepro';
 
   // Fetch App Configuration (Ads, Safe Mode, App Update, etc.)
   static Future<Map<String, dynamic>> fetchAppConfig() async {
@@ -44,6 +44,30 @@ class ApiService {
     }
   }
 
+  // Fetch dynamic home builder sections
+  static Future<List<dynamic>> fetchHomeSections(String? token) async {
+    try {
+      final headers = <String, String>{};
+      if (token != null && token.isNotEmpty) {
+        headers['Authorization'] = 'Bearer $token';
+      }
+      final response = await http.get(
+        Uri.parse('$baseUrl/home'),
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          return data['data'] as List<dynamic>;
+        }
+      }
+      return [];
+    } catch (e) {
+      print('Error fetching home sections: $e');
+      return [];
+    }
+  }
+
   static Future<List<dynamic>> fetchCategoryTracks(String slug) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/categories/tracks?slug=$slug&limit=20'));
@@ -69,17 +93,63 @@ class ApiService {
   static Future<List<dynamic>> searchTracks(String query) async {
     if (query.isEmpty) return [];
     try {
-      final response = await http.get(Uri.parse('$baseUrl/search?q=${Uri.encodeComponent(query)}'));
+      final response = await http.get(Uri.parse('$baseUrl/search?q=${Uri.encodeComponent(query)}&provider=youtube'));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['success'] == true && data['data'] != null) {
-          return data['data'] as List<dynamic>;
+          final resData = data['data'];
+          if (resData is Map && resData.containsKey('tracks')) {
+            return resData['tracks'] as List<dynamic>;
+          } else if (resData is List) {
+            return resData;
+          }
         }
       }
       return [];
     } catch (e) {
       print('Error searching tracks: $e');
       return [];
+    }
+  }
+
+  // Login
+  static Future<Map<String, dynamic>?> login(String email, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'email': email, 'password': password}),
+      );
+      final data = json.decode(response.body);
+      if (response.statusCode == 200 && data['success'] == true) {
+        return data['data'] as Map<String, dynamic>;
+      }
+      return {'error': data['message'] ?? 'Authentication failed'};
+    } catch (e) {
+      return {'error': 'Network connection error'};
+    }
+  }
+
+  // Register
+  static Future<Map<String, dynamic>?> register(String username, String email, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/register'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'username': username,
+          'displayName': username,
+          'email': email,
+          'password': password
+        }),
+      );
+      final data = json.decode(response.body);
+      if ((response.statusCode == 200 || response.statusCode == 201) && data['success'] == true) {
+        return data['data'] as Map<String, dynamic>;
+      }
+      return {'error': data['message'] ?? 'Registration failed'};
+    } catch (e) {
+      return {'error': 'Network connection error'};
     }
   }
 

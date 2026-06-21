@@ -30,6 +30,13 @@ export default function AppConfigManager() {
   const [rewardedAdUnitId, setRewardedAdUnitId] = useState("");
   const [nativeAdUnitId, setNativeAdUnitId] = useState("");
 
+  // AppLovin Specific
+  const [sdkKey, setSdkKey] = useState("");
+  const [applovinBannerAdUnitId, setApplovinBannerAdUnitId] = useState("");
+  const [applovinInterstitialAdUnitId, setApplovinInterstitialAdUnitId] = useState("");
+  const [applovinRewardedAdUnitId, setApplovinRewardedAdUnitId] = useState("");
+  const [applovinNativeAdUnitId, setApplovinNativeAdUnitId] = useState("");
+
   // Promo Banner Settings
   const [promoBannerEnabled, setPromoBannerEnabled] = useState(false);
   const [promoBannerImage, setPromoBannerImage] = useState("");
@@ -74,6 +81,11 @@ export default function AppConfigManager() {
     setInterstitialAdUnitId("");
     setRewardedAdUnitId("");
     setNativeAdUnitId("");
+    setSdkKey("");
+    setApplovinBannerAdUnitId("");
+    setApplovinInterstitialAdUnitId("");
+    setApplovinRewardedAdUnitId("");
+    setApplovinNativeAdUnitId("");
     setPromoBannerEnabled(false);
     setPromoBannerImage("");
     setPromoBannerTargetUrl("");
@@ -99,6 +111,12 @@ export default function AppConfigManager() {
     setInterstitialAdUnitId(conf.admob?.interstitialAdUnitId || "");
     setRewardedAdUnitId(conf.admob?.rewardedAdUnitId || "");
     setNativeAdUnitId(conf.admob?.nativeAdUnitId || "");
+
+    setSdkKey(conf.applovin?.sdkKey || "");
+    setApplovinBannerAdUnitId(conf.applovin?.bannerAdUnitId || "");
+    setApplovinInterstitialAdUnitId(conf.applovin?.interstitialAdUnitId || "");
+    setApplovinRewardedAdUnitId(conf.applovin?.rewardedAdUnitId || "");
+    setApplovinNativeAdUnitId(conf.applovin?.nativeAdUnitId || "");
 
     setPromoBannerEnabled(conf.promoBanner?.enabled || false);
     setPromoBannerImage(conf.promoBanner?.image || "");
@@ -129,6 +147,13 @@ export default function AppConfigManager() {
         interstitialAdUnitId,
         rewardedAdUnitId,
         nativeAdUnitId,
+      },
+      applovin: {
+        sdkKey,
+        bannerAdUnitId: applovinBannerAdUnitId,
+        interstitialAdUnitId: applovinInterstitialAdUnitId,
+        rewardedAdUnitId: applovinRewardedAdUnitId,
+        nativeAdUnitId: applovinNativeAdUnitId,
       },
       promoBanner: {
         enabled: promoBannerEnabled,
@@ -438,88 +463,174 @@ export default function AppConfigManager() {
                   </div>
                 </div>
 
-                {/* Right Column: AdMob Keys Configuration */}
+                {/* Right Column: Keys Configuration */}
                 <div className="space-y-4">
-                  <h3 className="font-bold text-white text-sm border-b border-stone-800 pb-2 uppercase tracking-wider text-stone-400">
-                    Google AdMob Unit IDs
-                  </h3>
-
-                  {adProvider !== "admob" ? (
-                    <div className="p-8 text-center bg-stone-950 border border-stone-850 rounded-lg flex flex-col justify-center items-center h-[340px]">
-                      <Settings className="w-10 h-10 text-stone-600 mb-2" />
-                      <p className="text-xs text-stone-500">AdMob Unit IDs will only be configurable when Google AdMob is chosen as the active network.</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
-                          AdMob App ID
-                        </label>
-                        <input
-                          type="text"
-                          value={appId}
-                          onChange={(e) => setAppId(e.target.value)}
-                          placeholder="e.g. ca-app-pub-xxxxxxxxxxxxxxxx~xxxxxxxxxx"
-                          className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
-                        />
+                  {adProvider === "none" && (
+                    <>
+                      <h3 className="font-bold text-white text-sm border-b border-stone-800 pb-2 uppercase tracking-wider text-stone-400">
+                        Ad Configuration Keys
+                      </h3>
+                      <div className="p-8 text-center bg-stone-950 border border-stone-850 rounded-lg flex flex-col justify-center items-center h-[340px]">
+                        <Settings className="w-10 h-10 text-stone-600 mb-2" />
+                        <p className="text-xs text-stone-500">Ad unit IDs will only be configurable when an active ad network is chosen.</p>
                       </div>
+                    </>
+                  )}
 
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
-                          Banner Ad Unit ID
-                        </label>
-                        <input
-                          type="text"
-                          value={bannerAdUnitId}
-                          onChange={(e) => setBannerAdUnitId(e.target.value)}
-                          placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx"
-                          className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
-                          disabled={!bannerEnabled}
-                        />
-                      </div>
+                  {adProvider === "admob" && (
+                    <>
+                      <h3 className="font-bold text-white text-sm border-b border-stone-800 pb-2 uppercase tracking-wider text-stone-400">
+                        Google AdMob Unit IDs
+                      </h3>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+                            AdMob App ID
+                          </label>
+                          <input
+                            type="text"
+                            value={appId}
+                            onChange={(e) => setAppId(e.target.value)}
+                            placeholder="e.g. ca-app-pub-xxxxxxxxxxxxxxxx~xxxxxxxxxx"
+                            className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
+                          />
+                        </div>
 
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
-                          Interstitial Ad Unit ID
-                        </label>
-                        <input
-                          type="text"
-                          value={interstitialAdUnitId}
-                          onChange={(e) => setInterstitialAdUnitId(e.target.value)}
-                          placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx"
-                          className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
-                          disabled={!interstitialEnabled}
-                        />
-                      </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+                            Banner Ad Unit ID
+                          </label>
+                          <input
+                            type="text"
+                            value={bannerAdUnitId}
+                            onChange={(e) => setBannerAdUnitId(e.target.value)}
+                            placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx"
+                            className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
+                            disabled={!bannerEnabled}
+                          />
+                        </div>
 
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
-                          Rewarded Video Ad Unit ID
-                        </label>
-                        <input
-                          type="text"
-                          value={rewardedAdUnitId}
-                          onChange={(e) => setRewardedAdUnitId(e.target.value)}
-                          placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx"
-                          className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
-                          disabled={!rewardedEnabled}
-                        />
-                      </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+                            Interstitial Ad Unit ID
+                          </label>
+                          <input
+                            type="text"
+                            value={interstitialAdUnitId}
+                            onChange={(e) => setInterstitialAdUnitId(e.target.value)}
+                            placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx"
+                            className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
+                            disabled={!interstitialEnabled}
+                          />
+                        </div>
 
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
-                          Native Advanced Ad Unit ID
-                        </label>
-                        <input
-                          type="text"
-                          value={nativeAdUnitId}
-                          onChange={(e) => setNativeAdUnitId(e.target.value)}
-                          placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx"
-                          className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
-                          disabled={!nativeEnabled}
-                        />
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+                            Rewarded Video Ad Unit ID
+                          </label>
+                          <input
+                            type="text"
+                            value={rewardedAdUnitId}
+                            onChange={(e) => setRewardedAdUnitId(e.target.value)}
+                            placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx"
+                            className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
+                            disabled={!rewardedEnabled}
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+                            Native Advanced Ad Unit ID
+                          </label>
+                          <input
+                            type="text"
+                            value={nativeAdUnitId}
+                            onChange={(e) => setNativeAdUnitId(e.target.value)}
+                            placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx"
+                            className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
+                            disabled={!nativeEnabled}
+                          />
+                        </div>
                       </div>
-                    </div>
+                    </>
+                  )}
+
+                  {adProvider === "applovin" && (
+                    <>
+                      <h3 className="font-bold text-white text-sm border-b border-stone-800 pb-2 uppercase tracking-wider text-stone-400">
+                        AppLovin Unit IDs
+                      </h3>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+                            AppLovin SDK Key
+                          </label>
+                          <input
+                            type="text"
+                            value={sdkKey}
+                            onChange={(e) => setSdkKey(e.target.value)}
+                            placeholder="Enter AppLovin SDK Key"
+                            className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+                            Banner Ad Unit ID
+                          </label>
+                          <input
+                            type="text"
+                            value={applovinBannerAdUnitId}
+                            onChange={(e) => setApplovinBannerAdUnitId(e.target.value)}
+                            placeholder="Enter Banner Ad Unit ID"
+                            className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
+                            disabled={!bannerEnabled}
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+                            Interstitial Ad Unit ID
+                          </label>
+                          <input
+                            type="text"
+                            value={applovinInterstitialAdUnitId}
+                            onChange={(e) => setApplovinInterstitialAdUnitId(e.target.value)}
+                            placeholder="Enter Interstitial Ad Unit ID"
+                            className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
+                            disabled={!interstitialEnabled}
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+                            Rewarded Video Ad Unit ID
+                          </label>
+                          <input
+                            type="text"
+                            value={applovinRewardedAdUnitId}
+                            onChange={(e) => setApplovinRewardedAdUnitId(e.target.value)}
+                            placeholder="Enter Rewarded Ad Unit ID"
+                            className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
+                            disabled={!rewardedEnabled}
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+                            Native Advanced Ad Unit ID
+                          </label>
+                          <input
+                            type="text"
+                            value={applovinNativeAdUnitId}
+                            onChange={(e) => setApplovinNativeAdUnitId(e.target.value)}
+                            placeholder="Enter Native Ad Unit ID"
+                            className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
+                            disabled={!nativeEnabled}
+                          />
+                        </div>
+                      </div>
+                    </>
                   )}
                 </div>
               </div>

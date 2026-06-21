@@ -373,6 +373,13 @@ export interface IAppConfigDocument extends Document {
     rewardedAdUnitId?: string;
     nativeAdUnitId?: string;
   };
+  applovin: {
+    sdkKey?: string;
+    bannerAdUnitId?: string;
+    interstitialAdUnitId?: string;
+    rewardedAdUnitId?: string;
+    nativeAdUnitId?: string;
+  };
   ads: {
     bannerEnabled: boolean;
     interstitialEnabled: boolean;
@@ -401,6 +408,13 @@ const AppConfigSchema = new Schema<IAppConfigDocument>(
     packageName: { type: String, required: true, unique: true, index: true },
     admob: {
       appId: { type: String },
+      bannerAdUnitId: { type: String },
+      interstitialAdUnitId: { type: String },
+      rewardedAdUnitId: { type: String },
+      nativeAdUnitId: { type: String },
+    },
+    applovin: {
+      sdkKey: { type: String },
       bannerAdUnitId: { type: String },
       interstitialAdUnitId: { type: String },
       rewardedAdUnitId: { type: String },

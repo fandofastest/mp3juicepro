@@ -135,30 +135,55 @@ class NowPlayingScreen extends StatelessWidget {
 
                   const Spacer(),
 
-                  // Title & Artist
-                  Column(
-                    children: [
-                      Text(
-                        currentTrack['title'] ?? 'Unknown Track',
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        currentTrack['artist'] ?? 'Unknown Artist',
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
+                   // Title & Artist with Favorite Button overlay
+                   Padding(
+                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                     child: Row(
+                       children: [
+                         const SizedBox(width: 48), // Spacer to balance favorite button
+                         Expanded(
+                           child: Column(
+                             children: [
+                               Text(
+                                 currentTrack['title'] ?? 'Unknown Track',
+                                 textAlign: TextAlign.center,
+                                 maxLines: 1,
+                                 overflow: TextOverflow.ellipsis,
+                                 style: const TextStyle(
+                                   color: Colors.white,
+                                   fontSize: 20,
+                                   fontWeight: FontWeight.bold,
+                                 ),
+                               ),
+                               const SizedBox(height: 6),
+                               Text(
+                                 currentTrack['artist'] ?? 'Unknown Artist',
+                                 textAlign: TextAlign.center,
+                                 style: TextStyle(
+                                   color: Colors.grey[400],
+                                   fontSize: 14,
+                                 ),
+                               ),
+                             ],
+                           ),
+                         ),
+                         IconButton(
+                           icon: Icon(
+                             player.isFavorite(currentTrack['vid'] ?? currentTrack['id'] ?? '')
+                                 ? Icons.favorite_rounded
+                                 : Icons.favorite_border_rounded,
+                             color: player.isFavorite(currentTrack['vid'] ?? currentTrack['id'] ?? '')
+                                 ? Colors.redAccent
+                                 : Colors.white70,
+                             size: 28,
+                           ),
+                           onPressed: () {
+                             player.toggleFavorite(currentTrack);
+                           },
+                         ),
+                       ],
+                     ),
+                   ),
 
                   const SizedBox(height: 24),
 

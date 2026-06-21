@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'providers/player_provider.dart';
+import 'providers/auth_provider.dart';
 import 'screens/main_navigation.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'com.mp3juicepro.audio',
+    androidNotificationChannelName: 'Mp3 Juice Pro Playback',
+    androidNotificationOngoing: true,
+  );
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PlayerProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: const MyApp(),
     ),

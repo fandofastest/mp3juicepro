@@ -18,13 +18,22 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
+  late final List<Widget> _screens;
 
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const SearchScreen(),
-    const LibraryScreen(),
-    const ProfileScreen(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      HomeScreen(onProfileTap: () {
+        setState(() {
+          _currentIndex = 3;
+        });
+      }),
+      const SearchScreen(),
+      const LibraryScreen(),
+      const ProfileScreen(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {

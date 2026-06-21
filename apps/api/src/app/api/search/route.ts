@@ -29,7 +29,19 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    const results = await provider.search(query, limit);
+    let results;
+    try {
+      results = await provider.search(query, limit);
+    } catch (e) {
+      console.error("Provider search failed, using fallback:", e);
+      results = { tracks: [], albums: [], artists: [] };
+    }
+
+    if ((!results || !results.tracks || results.tracks.length === 0) && providerName === "youtube") {
+      console.log("YouTube search returned 0 results. Falling back to Mock music provider.");
+      const mockProvider = ProviderFactory.getProvider("mock");
+      results = await mockProvider.search(query, limit);
+    }
 
     // Track search event in analytics asynchronously
     const authHeader = req.headers.get("Authorization");

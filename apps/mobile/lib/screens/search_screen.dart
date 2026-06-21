@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../services/api_service.dart';
 import '../providers/player_provider.dart';
+import '../widgets/song_options_sheet.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -160,7 +161,28 @@ class _SearchScreenState extends State<SearchScreen> {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(color: Colors.grey[400], fontSize: 12),
                               ),
-                              trailing: const Icon(Icons.play_circle_fill_rounded, color: Color(0xff39ff14), size: 32),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.more_vert_rounded,
+                                      color: Colors.grey,
+                                      size: 22,
+                                    ),
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true,
+                                        backgroundColor: Colors.transparent,
+                                        builder: (_) => SongOptionsSheet(track: trackMap),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 4),
+                                  const Icon(Icons.play_circle_fill_rounded, color: Color(0xff39ff14), size: 32),
+                                ],
+                              ),
                               onTap: () {
                                 player.setPlaylist([trackMap], 0);
                               },

@@ -23,6 +23,13 @@ export async function GET(req: NextRequest) {
             rewardedAdUnitId: "",
             nativeAdUnitId: "",
           },
+          applovin: {
+            sdkKey: "",
+            bannerAdUnitId: "",
+            interstitialAdUnitId: "",
+            rewardedAdUnitId: "",
+            nativeAdUnitId: "",
+          },
           ads: {
             bannerEnabled: false,
             interstitialEnabled: false,
