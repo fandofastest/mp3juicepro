@@ -1,0 +1,21 @@
+{
+  "name": "headless-music-platform",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:admin\"",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "dev:admin": "npm run dev --workspace=apps/admin",
+    "build": "npm run build --workspaces --if-present",
+    "start": "npm run start --workspaces --if-present",
+    "seed": "npm run seed --workspace=packages/database --if-present"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3",
+    "typescript": "^5.5.4"
+  }
+}

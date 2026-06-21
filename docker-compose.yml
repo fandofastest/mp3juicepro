@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: mp3juice-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mp3juice-network
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: mp3juice-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - mp3juice-network
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    container_name: mp3juice-api
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongodb:27017/mp3juice
+      - REDIS_URL=redis://redis:6379
+      - JWT_ACCESS_SECRET=access_secret_123456_key_prod
+      - JWT_REFRESH_SECRET=refresh_secret_123456_key_prod
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - mp3juice-network
+
+  admin:
+    build:
+      context: .
+      dockerfile: docker/admin.Dockerfile
+    container_name: mp3juice-admin
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - API_BASE_URL=http://api:3001
+    depends_on:
+      - api
+    networks:
+      - mp3juice-network
+
+volumes:
+  mongo-data:
+  redis-data:
+
+networks:
+  mp3juice-network:
+    driver: bridge

@@ -1,0 +1,13 @@
+{
+  "name": "@headless/ui",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "echo ui-built"
+  },
+  "dependencies": {
+    "react": "^19.0.0-rc",
+    "react-dom": "^19.0.0-rc"
+  }
+}

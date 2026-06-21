@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "paths": {
+      "@headless/types": ["./packages/types/src/index.ts"],
+      "@headless/utils": ["./packages/utils/src/index.ts"],
+      "@headless/database": ["./packages/database/src/index.ts"],
+      "@headless/auth": ["./packages/auth/src/index.ts"],
+      "@headless/providers": ["./packages/providers/src/index.ts"],
+      "@headless/ui": ["./packages/ui/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}
