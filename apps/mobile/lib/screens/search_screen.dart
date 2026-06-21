@@ -123,8 +123,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           final track = _searchResults[index];
                           final trackMap = {
                             'vid': track['vid'] ?? track['id'],
-                            'title': track['title'] ?? 'YouTube Track',
-                            'artist': track['artist'] ?? 'YouTube Video',
+                            'title': track['title'] ?? 'Online Track',
+                            'artist': track['artist'] ?? 'Video',
                             'cover': track['cover'] ?? 'https://i.ytimg.com/vi/${track['vid'] ?? track['id']}/hqdefault.jpg',
                             'duration': track['duration'] ?? 240,
                           };
