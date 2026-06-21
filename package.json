@@ -14,8 +14,10 @@
     "start": "npm run start --workspaces --if-present",
     "seed": "npm run seed --workspace=packages/database --if-present"
   },
-  "devDependencies": {
-    "concurrently": "^10.0.3",
+  "dependencies": {
     "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3"
   }
 }
