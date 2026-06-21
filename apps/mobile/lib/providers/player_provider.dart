@@ -38,6 +38,8 @@ class PlayerProvider with ChangeNotifier {
     // Listen to player state
     _audioPlayer.playerStateStream.listen((state) {
       _isPlaying = state.playing;
+      _isLoading = state.processingState == ProcessingState.loading ||
+                   state.processingState == ProcessingState.buffering;
       if (state.processingState == ProcessingState.completed) {
         next();
       }
@@ -132,9 +134,9 @@ class PlayerProvider with ChangeNotifier {
       print('Playback error: $e');
       _errorMessage = "Unable to play track. Server returned error.";
       _isPlaying = false;
+      _isLoading = false;
       await _audioPlayer.stop();
     } finally {
-      _isLoading = false;
       notifyListeners();
     }
   }

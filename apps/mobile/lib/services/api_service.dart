@@ -44,14 +44,18 @@ class ApiService {
     }
   }
 
-  // Get Tracks inside Category
   static Future<List<dynamic>> fetchCategoryTracks(String slug) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/categories/tracks?slug=$slug&limit=20'));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['success'] == true && data['data'] != null) {
-          return data['data'] as List<dynamic>;
+          final resData = data['data'];
+          if (resData is Map && resData.containsKey('tracks')) {
+            return resData['tracks'] as List<dynamic>;
+          } else if (resData is List) {
+            return resData;
+          }
         }
       }
       return [];
