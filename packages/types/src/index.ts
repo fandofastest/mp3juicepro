@@ -311,7 +311,6 @@ export interface AppConfig {
     bannerAdUnitId?: string;
     interstitialAdUnitId?: string;
     interSplashAdUnitId?: string;
-    intersplashAdUnitId?: string;
     rewardedAdUnitId?: string;
     nativeAdUnitId?: string;
   };
@@ -320,15 +319,13 @@ export interface AppConfig {
     bannerAdUnitId?: string;
     interstitialAdUnitId?: string;
     interSplashAdUnitId?: string;
-    intersplashAdUnitId?: string;
     rewardedAdUnitId?: string;
     nativeAdUnitId?: string;
   };
   ads: {
     bannerEnabled: boolean;
     interstitialEnabled: boolean;
-    interSplashEnabled?: boolean;
-    intersplashEnabled?: boolean;
+    interSplashEnabled: boolean;
     rewardedEnabled: boolean;
     nativeEnabled: boolean;
     interstitialInterval: number;
@@ -356,7 +353,6 @@ export const AppConfigInputSchema = z.object({
     bannerAdUnitId: z.string().optional(),
     interstitialAdUnitId: z.string().optional(),
     interSplashAdUnitId: z.string().optional(),
-    intersplashAdUnitId: z.string().optional(),
     rewardedAdUnitId: z.string().optional(),
     nativeAdUnitId: z.string().optional(),
   }).default({}),
@@ -365,7 +361,6 @@ export const AppConfigInputSchema = z.object({
     bannerAdUnitId: z.string().optional(),
     interstitialAdUnitId: z.string().optional(),
     interSplashAdUnitId: z.string().optional(),
-    intersplashAdUnitId: z.string().optional(),
     rewardedAdUnitId: z.string().optional(),
     nativeAdUnitId: z.string().optional(),
   }).default({}),
@@ -373,7 +368,6 @@ export const AppConfigInputSchema = z.object({
     bannerEnabled: z.boolean().default(false),
     interstitialEnabled: z.boolean().default(false),
     interSplashEnabled: z.boolean().default(false),
-    intersplashEnabled: z.boolean().default(false),
     rewardedEnabled: z.boolean().default(false),
     nativeEnabled: z.boolean().default(false),
     interstitialInterval: z.number().default(5),

@@ -108,7 +108,7 @@ export default function AppConfigManager() {
     setAdProvider(conf.ads?.adProvider || "none");
     setBannerEnabled(conf.ads?.bannerEnabled || false);
     setInterstitialEnabled(conf.ads?.interstitialEnabled || false);
-    setInterSplashEnabled(conf.ads?.interSplashEnabled || conf.ads?.intersplashEnabled || false);
+    setInterSplashEnabled(conf.ads?.interSplashEnabled || false);
     setRewardedEnabled(conf.ads?.rewardedEnabled || false);
     setNativeEnabled(conf.ads?.nativeEnabled || false);
     setInterstitialInterval(conf.ads?.interstitialInterval ?? 5);
@@ -116,14 +116,14 @@ export default function AppConfigManager() {
     setAppId(conf.admob?.appId || "");
     setBannerAdUnitId(conf.admob?.bannerAdUnitId || "");
     setInterstitialAdUnitId(conf.admob?.interstitialAdUnitId || "");
-    setInterSplashAdUnitId(conf.admob?.interSplashAdUnitId || conf.admob?.intersplashAdUnitId || "");
+    setInterSplashAdUnitId(conf.admob?.interSplashAdUnitId || "");
     setRewardedAdUnitId(conf.admob?.rewardedAdUnitId || "");
     setNativeAdUnitId(conf.admob?.nativeAdUnitId || "");
 
     setSdkKey(conf.applovin?.sdkKey || "");
     setApplovinBannerAdUnitId(conf.applovin?.bannerAdUnitId || "");
     setApplovinInterstitialAdUnitId(conf.applovin?.interstitialAdUnitId || "");
-    setApplovinInterSplashAdUnitId(conf.applovin?.interSplashAdUnitId || conf.applovin?.intersplashAdUnitId || "");
+    setApplovinInterSplashAdUnitId(conf.applovin?.interSplashAdUnitId || "");
     setApplovinRewardedAdUnitId(conf.applovin?.rewardedAdUnitId || "");
     setApplovinNativeAdUnitId(conf.applovin?.nativeAdUnitId || "");
 
@@ -146,7 +146,6 @@ export default function AppConfigManager() {
         bannerEnabled,
         interstitialEnabled,
         interSplashEnabled,
-        intersplashEnabled: interSplashEnabled,
         rewardedEnabled,
         nativeEnabled,
         interstitialInterval: Number(interstitialInterval),
@@ -157,7 +156,6 @@ export default function AppConfigManager() {
         bannerAdUnitId,
         interstitialAdUnitId,
         interSplashAdUnitId,
-        intersplashAdUnitId: interSplashAdUnitId,
         rewardedAdUnitId,
         nativeAdUnitId,
       },
@@ -166,7 +164,6 @@ export default function AppConfigManager() {
         bannerAdUnitId: applovinBannerAdUnitId,
         interstitialAdUnitId: applovinInterstitialAdUnitId,
         interSplashAdUnitId: applovinInterSplashAdUnitId,
-        intersplashAdUnitId: applovinInterSplashAdUnitId,
         rewardedAdUnitId: applovinRewardedAdUnitId,
         nativeAdUnitId: applovinNativeAdUnitId,
       },
@@ -286,8 +283,8 @@ export default function AppConfigManager() {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-stone-400">InterSplash Ads:</span>
-                    <span className={(conf.ads?.interSplashEnabled || conf.ads?.intersplashEnabled) ? "text-emerald-400 font-semibold" : "text-stone-600"}>
-                      {(conf.ads?.interSplashEnabled || conf.ads?.intersplashEnabled) ? "Enabled" : "Disabled"}
+                    <span className={conf.ads?.interSplashEnabled ? "text-emerald-400 font-semibold" : "text-stone-600"}>
+                      {conf.ads?.interSplashEnabled ? "Enabled" : "Disabled"}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">

@@ -371,7 +371,6 @@ export interface IAppConfigDocument extends Document {
     bannerAdUnitId?: string;
     interstitialAdUnitId?: string;
     interSplashAdUnitId?: string;
-    intersplashAdUnitId?: string;
     rewardedAdUnitId?: string;
     nativeAdUnitId?: string;
   };
@@ -380,15 +379,13 @@ export interface IAppConfigDocument extends Document {
     bannerAdUnitId?: string;
     interstitialAdUnitId?: string;
     interSplashAdUnitId?: string;
-    intersplashAdUnitId?: string;
     rewardedAdUnitId?: string;
     nativeAdUnitId?: string;
   };
   ads: {
     bannerEnabled: boolean;
     interstitialEnabled: boolean;
-    interSplashEnabled?: boolean;
-    intersplashEnabled?: boolean;
+    interSplashEnabled: boolean;
     rewardedEnabled: boolean;
     nativeEnabled: boolean;
     interstitialInterval: number;
@@ -417,7 +414,6 @@ const AppConfigSchema = new Schema<IAppConfigDocument>(
       bannerAdUnitId: { type: String },
       interstitialAdUnitId: { type: String },
       interSplashAdUnitId: { type: String },
-      intersplashAdUnitId: { type: String },
       rewardedAdUnitId: { type: String },
       nativeAdUnitId: { type: String },
     },
@@ -426,7 +422,6 @@ const AppConfigSchema = new Schema<IAppConfigDocument>(
       bannerAdUnitId: { type: String },
       interstitialAdUnitId: { type: String },
       interSplashAdUnitId: { type: String },
-      intersplashAdUnitId: { type: String },
       rewardedAdUnitId: { type: String },
       nativeAdUnitId: { type: String },
     },
@@ -434,7 +429,6 @@ const AppConfigSchema = new Schema<IAppConfigDocument>(
       bannerEnabled: { type: Boolean, default: false },
       interstitialEnabled: { type: Boolean, default: false },
       interSplashEnabled: { type: Boolean, default: false },
-      intersplashEnabled: { type: Boolean, default: false },
       rewardedEnabled: { type: Boolean, default: false },
       nativeEnabled: { type: Boolean, default: false },
       interstitialInterval: { type: Number, default: 5 },
