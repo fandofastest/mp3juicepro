@@ -87,6 +87,7 @@ class PlayerProvider with ChangeNotifier {
     final config = await ApiService.fetchAppConfig();
     if (config.containsKey('safeMode')) {
       _isSafeModeActive = config['safeMode'] == true;
+      ApiService.isSafeModeActive = _isSafeModeActive;
       notifyListeners();
     }
   }
@@ -144,31 +145,46 @@ class PlayerProvider with ChangeNotifier {
 
     // Check Safe Mode state first locally (and refresh it)
     await checkSafeModeStatus();
-    if (_isSafeModeActive) {
-      _isLoading = false;
-      _isPlaying = false;
-      _errorMessage = "Song playback is disabled (Safe Mode Active)";
-      await _audioPlayer.stop();
-      notifyListeners();
-      return;
+    var activeTrack = track;
+    if (_isSafeModeActive && track['provider'] != 'jamendo') {
+      try {
+        final query = "${track['title']} ${track['artist'] ?? ''}".trim();
+        final jamendoTracks = await ApiService.searchJamendoTracks(query);
+        if (jamendoTracks.isNotEmpty) {
+          activeTrack = Map<String, dynamic>.from(jamendoTracks.first);
+          activeTrack['title'] = track['title'];
+          activeTrack['artist'] = track['artist'];
+          activeTrack['cover'] = track['cover'] ?? jamendoTracks.first['cover'];
+        } else {
+          final fallbackTracks = await ApiService.searchJamendoTracks("music");
+          if (fallbackTracks.isNotEmpty) {
+            activeTrack = Map<String, dynamic>.from(fallbackTracks.first);
+            activeTrack['title'] = track['title'];
+            activeTrack['artist'] = track['artist'];
+            activeTrack['cover'] = track['cover'] ?? fallbackTracks.first['cover'];
+          }
+        }
+      } catch (e) {
+        print("Error resolving Jamendo track match: $e");
+      }
     }
 
     try {
       String? streamUrl;
 
       // 1. If it's a mock track or has a direct audio stream URL, use it directly
-      if (track['url'] != null && 
-          (track['url'].toString().endsWith('.mp3') || 
-           track['provider'] == 'mock' || 
-           (track['url'].toString().startsWith('http') && 
-            !track['url'].toString().contains('youtube.com') && 
-            !track['url'].toString().contains('youtu.be')))) {
-        streamUrl = track['url'];
+      if (activeTrack['url'] != null && 
+          (activeTrack['url'].toString().endsWith('.mp3') || 
+           activeTrack['provider'] == 'mock' || 
+           (activeTrack['url'].toString().startsWith('http') && 
+            !activeTrack['url'].toString().contains('youtube.com') && 
+            !activeTrack['url'].toString().contains('youtu.be')))) {
+        streamUrl = activeTrack['url'];
       }
 
       // 2. Otherwise fetch play details from API
       if (streamUrl == null) {
-        final vid = track['vid'] ?? track['id'];
+        final vid = activeTrack['vid'] ?? activeTrack['id'];
         if (vid == null) throw Exception("Track Video ID not found");
 
         try {
@@ -176,7 +192,11 @@ class PlayerProvider with ChangeNotifier {
           if (playDetails != null) {
             if (playDetails['blocked'] == true) {
               _isSafeModeActive = true;
-              _errorMessage = playDetails['message'] ?? "Playback disabled by Safe Mode";
+              ApiService.isSafeModeActive = true;
+              final msg = playDetails['message']?.toString() ?? '';
+              _errorMessage = msg.toLowerCase().contains("safe mode") || msg.toLowerCase().contains("safemode")
+                  ? "Track is temporarily unavailable."
+                  : (msg.isEmpty ? "Track is temporarily unavailable." : msg);
               await _audioPlayer.stop();
               _isLoading = false;
               notifyListeners();
@@ -205,9 +225,9 @@ class PlayerProvider with ChangeNotifier {
         tag: MediaItem(
           id: checkVid.toString(),
           album: "Mp3 Juice Pro",
-          title: track['title'] ?? 'Unknown Track',
-          artist: track['artist'] ?? 'Unknown Artist',
-          artUri: Uri.tryParse(track['cover'] ?? ''),
+          title: activeTrack['title'] ?? 'Unknown Track',
+          artist: activeTrack['artist'] ?? 'Unknown Artist',
+          artUri: Uri.tryParse(activeTrack['cover'] ?? ''),
         ),
       );
       await _audioPlayer.setAudioSource(source);
@@ -232,7 +252,7 @@ class PlayerProvider with ChangeNotifier {
       // If Safe Mode has been enabled in the meantime, block it
       await checkSafeModeStatus();
       if (_isSafeModeActive) {
-        _errorMessage = "Song playback is disabled (Safe Mode Active)";
+        _errorMessage = "Unable to play track. Please try again later.";
         notifyListeners();
         return;
       }
@@ -424,18 +444,42 @@ class PlayerProvider with ChangeNotifier {
 
     if (isDownloaded(vid)) return;
 
+    Map<String, dynamic> activeTrack = track;
+    if (_isSafeModeActive && track['provider'] != 'jamendo') {
+      try {
+        final query = "${track['title']} ${track['artist'] ?? ''}".trim();
+        final jamendoTracks = await ApiService.searchJamendoTracks(query);
+        if (jamendoTracks.isNotEmpty) {
+          activeTrack = Map<String, dynamic>.from(jamendoTracks.first);
+          activeTrack['title'] = track['title'];
+          activeTrack['artist'] = track['artist'];
+          activeTrack['cover'] = track['cover'] ?? jamendoTracks.first['cover'];
+        } else {
+          final fallbackTracks = await ApiService.searchJamendoTracks("music");
+          if (fallbackTracks.isNotEmpty) {
+            activeTrack = Map<String, dynamic>.from(fallbackTracks.first);
+            activeTrack['title'] = track['title'];
+            activeTrack['artist'] = track['artist'];
+            activeTrack['cover'] = track['cover'] ?? fallbackTracks.first['cover'];
+          }
+        }
+      } catch (e) {
+        print("Error resolving Jamendo track match for download: $e");
+      }
+    }
+
     try {
       onProgress(0.05);
 
       // 1. Resolve streaming URL
       String? streamUrl;
-      if (track['url'] != null && 
-          (track['url'].toString().endsWith('.mp3') || 
-           track['provider'] == 'mock' || 
-           (track['url'].toString().startsWith('http') && 
-            !track['url'].toString().contains('youtube.com') && 
-            !track['url'].toString().contains('youtu.be')))) {
-        streamUrl = track['url'];
+      if (activeTrack['url'] != null && 
+          (activeTrack['url'].toString().endsWith('.mp3') || 
+           activeTrack['provider'] == 'mock' || 
+           (activeTrack['url'].toString().startsWith('http') && 
+            !activeTrack['url'].toString().contains('youtube.com') && 
+            !activeTrack['url'].toString().contains('youtu.be')))) {
+        streamUrl = activeTrack['url'];
       }
 
       if (streamUrl == null) {

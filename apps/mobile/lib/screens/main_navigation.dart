@@ -79,9 +79,7 @@ class _MainNavigationState extends State<MainNavigation> {
                         color: Colors.black.withOpacity(0.55),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: player.isSafeModeActive
-                              ? Colors.red.withOpacity(0.3)
-                              : Colors.white.withOpacity(0.08),
+                          color: Colors.white.withOpacity(0.08),
                           width: 1,
                         ),
                       ),
@@ -137,62 +135,31 @@ class _MainNavigationState extends State<MainNavigation> {
                                   ],
                                 ),
                               ),
-                              // Safe Mode block indicator or Audio Visualizer/Play Button
-                              if (player.isSafeModeActive)
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Icon(Icons.shield_outlined, color: Colors.redAccent, size: 22),
-                                )
-                              else ...[
-                                if (player.isLoading)
-                                  const SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(Color(0xff39ff14)),
-                                    ),
-                                  )
-                                else
-                                  IconButton(
-                                    icon: Icon(
-                                      player.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                                      color: Colors.white,
-                                      size: 28,
-                                    ),
-                                    onPressed: () => player.togglePlay(),
+                              if (player.isLoading)
+                                const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xff39ff14)),
                                   ),
+                                )
+                              else
                                 IconButton(
-                                  icon: const Icon(Icons.skip_next_rounded, color: Colors.white, size: 24),
-                                  onPressed: () => player.next(),
+                                  icon: Icon(
+                                    player.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                                    color: Colors.white,
+                                    size: 28,
+                                  ),
+                                  onPressed: () => player.togglePlay(),
                                 ),
-                              ]
+                              IconButton(
+                                icon: const Icon(Icons.skip_next_rounded, color: Colors.white, size: 24),
+                                onPressed: () => player.next(),
+                              ),
                             ],
                           ),
-                          // Safe Mode Warning or Progress bar
-                          if (player.isSafeModeActive)
-                            Container(
-                              width: double.infinity,
-                              margin: const EdgeInsets.only(top: 6),
-                              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                              decoration: BoxDecoration(
-                                color: Colors.red[950]!.withOpacity(0.4),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: const Row(
-                                children: [
-                                  Icon(Icons.error_outline_rounded, color: Colors.redAccent, size: 14),
-                                  SizedBox(width: 6),
-                                  Expanded(
-                                    child: Text(
-                                      'Safe Mode Active: Catalog browsing only',
-                                      style: TextStyle(color: Colors.redAccent, fontSize: 10, fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          else if (player.duration.inSeconds > 0)
+                          if (player.duration.inSeconds > 0)
                             Padding(
                               padding: const EdgeInsets.only(top: 6, left: 4, right: 4),
                               child: ClipRRect(

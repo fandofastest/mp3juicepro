@@ -38,14 +38,27 @@ class _HomeScreenState extends State<HomeScreen> {
     final config = await ApiService.fetchAppConfig();
     await AdService.instance.initialize(config);
     
-    // Fetch Home Sections (pass token if user logged in)
-    String? token;
-    if (mounted) {
-      final auth = Provider.of<AuthProvider>(context, listen: false);
-      token = auth.token;
+    List<dynamic> homeSections;
+    if (ApiService.isSafeModeActive) {
+      final topTracks = await ApiService.fetchTopJamendoTracks();
+      homeSections = [
+        {
+          'title': 'Top Music',
+          'subtitle': 'Popular royalty-free tracks from Jamendo',
+          'layout': 'list',
+          'type': 'tracks',
+          'items': topTracks,
+        }
+      ];
+    } else {
+      // Fetch Home Sections (pass token if user logged in)
+      String? token;
+      if (mounted) {
+        final auth = Provider.of<AuthProvider>(context, listen: false);
+        token = auth.token;
+      }
+      homeSections = await ApiService.fetchHomeSections(token);
     }
-    
-    final homeSections = await ApiService.fetchHomeSections(token);
 
     if (mounted) {
       setState(() {
@@ -301,39 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 physics: const AlwaysScrollableScrollPhysics(),
                 children: [
-                  // Safe Mode Header warning if active
-                  if (player.isSafeModeActive)
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 16),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.red[950]!.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.redAccent.withOpacity(0.3)),
-                      ),
-                      child: const Row(
-                        children: [
-                          Icon(Icons.security_rounded, color: Colors.redAccent, size: 24),
-                          SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Safe Mode Enabled',
-                                  style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(height: 2),
-                                Text(
-                                  'App is in catalog-only mode. Audio playback and downloads are restricted.',
-                                  style: TextStyle(color: Colors.redAccent, fontSize: 11),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+
 
                   // Promotional Banner from App Config
                   if (_appConfig != null &&

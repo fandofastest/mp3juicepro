@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 class ApiService {
   static const String baseUrl = 'https://mp3juicepro-api.vercel.app/api';
   static const String packageName = 'com.mp3juice.mp3juicepro';
+  static const String jamendoClientId = '87c44b11';
+  static bool isSafeModeActive = false;
 
   // Fetch App Configuration (Ads, Safe Mode, App Update, etc.)
   static Future<Map<String, dynamic>> fetchAppConfig() async {
@@ -18,7 +20,9 @@ class ApiService {
         final data = json.decode(response.body);
         print('Fetched App Config Response: $data');
         if (data['success'] == true && data['data'] != null) {
-          return data['data'] as Map<String, dynamic>;
+          final config = data['data'] as Map<String, dynamic>;
+          isSafeModeActive = config['safeMode'] == true;
+          return config;
         }
       }
       return {};
@@ -70,6 +74,9 @@ class ApiService {
   }
 
   static Future<List<dynamic>> fetchCategoryTracks(String slug) async {
+    if (isSafeModeActive) {
+      return searchJamendoTracks(slug, limit: 20, isTagSearch: true);
+    }
     try {
       final response = await http.get(Uri.parse('$baseUrl/categories/tracks?slug=$slug&limit=20'));
       if (response.statusCode == 200) {
@@ -93,6 +100,9 @@ class ApiService {
   // Search Tracks
   static Future<List<dynamic>> searchTracks(String query) async {
     if (query.isEmpty) return [];
+    if (isSafeModeActive) {
+      return searchJamendoTracks(query);
+    }
     try {
       final response = await http.get(Uri.parse('$baseUrl/search?q=${Uri.encodeComponent(query)}&provider=youtube'));
       if (response.statusCode == 200) {
@@ -172,13 +182,71 @@ class ApiService {
       } else if (response.statusCode == 403) {
         return {
           'blocked': true,
-          'message': data['message'] ?? 'Song playback is disabled (Safe Mode Active)',
+          'message': data['message'] ?? 'Song is temporarily unavailable.',
         };
       }
       return null;
     } catch (e) {
       print('Error fetching play link: $e');
       return null;
+    }
+  }
+
+  // Search Jamendo Tracks Helper
+  static Future<List<dynamic>> searchJamendoTracks(String query, {int limit = 30, bool isTagSearch = false}) async {
+    if (query.isEmpty) return [];
+    try {
+      final searchParam = isTagSearch ? 'tags' : 'namesearch';
+      final url = 'https://api.jamendo.com/v3.0/tracks/?client_id=$jamendoClientId&format=json&$searchParam=${Uri.encodeComponent(query)}&limit=$limit';
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['results'] != null) {
+          final List<dynamic> results = data['results'];
+          return results.map((item) => {
+            'id': item['id'].toString(),
+            'vid': item['id'].toString(),
+            'title': item['name'] ?? 'Unknown Title',
+            'artist': item['artist_name'] ?? 'Unknown Artist',
+            'cover': item['image'] ?? '',
+            'url': 'https://api.jamendo.com/v3.0/tracks/file/?client_id=$jamendoClientId&id=${item['id']}&action=stream',
+            'duration': item['duration'] ?? 0,
+            'provider': 'jamendo',
+          }).toList();
+        }
+      }
+      return [];
+    } catch (e) {
+      print('Error searching Jamendo tracks: $e');
+      return [];
+    }
+  }
+
+  // Fetch Top/Popular Jamendo Tracks
+  static Future<List<dynamic>> fetchTopJamendoTracks({int limit = 30}) async {
+    try {
+      final url = 'https://api.jamendo.com/v3.0/tracks/?client_id=$jamendoClientId&format=json&order=popularity_total&limit=$limit';
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['results'] != null) {
+          final List<dynamic> results = data['results'];
+          return results.map((item) => {
+            'id': item['id'].toString(),
+            'vid': item['id'].toString(),
+            'title': item['name'] ?? 'Unknown Title',
+            'artist': item['artist_name'] ?? 'Unknown Artist',
+            'cover': item['image'] ?? '',
+            'url': 'https://api.jamendo.com/v3.0/tracks/file/?client_id=$jamendoClientId&id=${item['id']}&action=stream',
+            'duration': item['duration'] ?? 0,
+            'provider': 'jamendo',
+          }).toList();
+        }
+      }
+      return [];
+    } catch (e) {
+      print('Error fetching Top Jamendo tracks: $e');
+      return [];
     }
   }
 }

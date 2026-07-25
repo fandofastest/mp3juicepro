@@ -72,38 +72,6 @@ class NowPlayingScreen extends StatelessWidget {
                   ),
                   const Spacer(),
 
-                  // Safe Mode Banner Alert
-                  if (player.isSafeModeActive)
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: Colors.red[950]!.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.redAccent.withOpacity(0.3)),
-                      ),
-                      child: Column(
-                        children: [
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.security_rounded, color: Colors.redAccent, size: 20),
-                              SizedBox(width: 8),
-                              Text(
-                                'Playback Restricted',
-                                style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            'App is in Safe Mode. Music playback and downloads are disabled.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.redAccent, fontSize: 11),
-                          ),
-                        ],
-                      ),
-                    ),
 
                   // Cover Art
                   Container(
@@ -114,9 +82,7 @@ class NowPlayingScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: player.isSafeModeActive
-                              ? Colors.red.withOpacity(0.15)
-                              : const Color(0xff39ff14).withOpacity(0.15),
+                          color: const Color(0xff39ff14).withOpacity(0.15),
                           blurRadius: 30,
                           spreadRadius: 2,
                         )
@@ -254,17 +220,13 @@ class NowPlayingScreen extends StatelessWidget {
                         child: Container(
                           width: 64,
                           height: 64,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            color: player.isSafeModeActive
-                                ? Colors.redAccent
-                                : const Color(0xff39ff14),
+                            color: Color(0xff39ff14),
                           ),
                           child: Icon(
-                            player.isSafeModeActive
-                                ? Icons.shield_outlined
-                                : (player.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded),
-                            color: player.isSafeModeActive ? Colors.white : Colors.black,
+                            player.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                            color: Colors.black,
                             size: 36,
                           ),
                         ),

@@ -19,6 +19,7 @@ export default function AppConfigManager() {
   const [adProvider, setAdProvider] = useState("none");
   const [bannerEnabled, setBannerEnabled] = useState(false);
   const [interstitialEnabled, setInterstitialEnabled] = useState(false);
+  const [interSplashEnabled, setInterSplashEnabled] = useState(false);
   const [rewardedEnabled, setRewardedEnabled] = useState(false);
   const [nativeEnabled, setNativeEnabled] = useState(false);
   const [interstitialInterval, setInterstitialInterval] = useState(5);
@@ -27,6 +28,7 @@ export default function AppConfigManager() {
   const [appId, setAppId] = useState("");
   const [bannerAdUnitId, setBannerAdUnitId] = useState("");
   const [interstitialAdUnitId, setInterstitialAdUnitId] = useState("");
+  const [interSplashAdUnitId, setInterSplashAdUnitId] = useState("");
   const [rewardedAdUnitId, setRewardedAdUnitId] = useState("");
   const [nativeAdUnitId, setNativeAdUnitId] = useState("");
 
@@ -34,6 +36,7 @@ export default function AppConfigManager() {
   const [sdkKey, setSdkKey] = useState("");
   const [applovinBannerAdUnitId, setApplovinBannerAdUnitId] = useState("");
   const [applovinInterstitialAdUnitId, setApplovinInterstitialAdUnitId] = useState("");
+  const [applovinInterSplashAdUnitId, setApplovinInterSplashAdUnitId] = useState("");
   const [applovinRewardedAdUnitId, setApplovinRewardedAdUnitId] = useState("");
   const [applovinNativeAdUnitId, setApplovinNativeAdUnitId] = useState("");
 
@@ -73,17 +76,20 @@ export default function AppConfigManager() {
     setAdProvider("none");
     setBannerEnabled(false);
     setInterstitialEnabled(false);
+    setInterSplashEnabled(false);
     setRewardedEnabled(false);
     setNativeEnabled(false);
     setInterstitialInterval(5);
     setAppId("");
     setBannerAdUnitId("");
     setInterstitialAdUnitId("");
+    setInterSplashAdUnitId("");
     setRewardedAdUnitId("");
     setNativeAdUnitId("");
     setSdkKey("");
     setApplovinBannerAdUnitId("");
     setApplovinInterstitialAdUnitId("");
+    setApplovinInterSplashAdUnitId("");
     setApplovinRewardedAdUnitId("");
     setApplovinNativeAdUnitId("");
     setPromoBannerEnabled(false);
@@ -102,6 +108,7 @@ export default function AppConfigManager() {
     setAdProvider(conf.ads?.adProvider || "none");
     setBannerEnabled(conf.ads?.bannerEnabled || false);
     setInterstitialEnabled(conf.ads?.interstitialEnabled || false);
+    setInterSplashEnabled(conf.ads?.interSplashEnabled || conf.ads?.intersplashEnabled || false);
     setRewardedEnabled(conf.ads?.rewardedEnabled || false);
     setNativeEnabled(conf.ads?.nativeEnabled || false);
     setInterstitialInterval(conf.ads?.interstitialInterval ?? 5);
@@ -109,12 +116,14 @@ export default function AppConfigManager() {
     setAppId(conf.admob?.appId || "");
     setBannerAdUnitId(conf.admob?.bannerAdUnitId || "");
     setInterstitialAdUnitId(conf.admob?.interstitialAdUnitId || "");
+    setInterSplashAdUnitId(conf.admob?.interSplashAdUnitId || conf.admob?.intersplashAdUnitId || "");
     setRewardedAdUnitId(conf.admob?.rewardedAdUnitId || "");
     setNativeAdUnitId(conf.admob?.nativeAdUnitId || "");
 
     setSdkKey(conf.applovin?.sdkKey || "");
     setApplovinBannerAdUnitId(conf.applovin?.bannerAdUnitId || "");
     setApplovinInterstitialAdUnitId(conf.applovin?.interstitialAdUnitId || "");
+    setApplovinInterSplashAdUnitId(conf.applovin?.interSplashAdUnitId || conf.applovin?.intersplashAdUnitId || "");
     setApplovinRewardedAdUnitId(conf.applovin?.rewardedAdUnitId || "");
     setApplovinNativeAdUnitId(conf.applovin?.nativeAdUnitId || "");
 
@@ -136,6 +145,8 @@ export default function AppConfigManager() {
       ads: {
         bannerEnabled,
         interstitialEnabled,
+        interSplashEnabled,
+        intersplashEnabled: interSplashEnabled,
         rewardedEnabled,
         nativeEnabled,
         interstitialInterval: Number(interstitialInterval),
@@ -145,6 +156,8 @@ export default function AppConfigManager() {
         appId,
         bannerAdUnitId,
         interstitialAdUnitId,
+        interSplashAdUnitId,
+        intersplashAdUnitId: interSplashAdUnitId,
         rewardedAdUnitId,
         nativeAdUnitId,
       },
@@ -152,6 +165,8 @@ export default function AppConfigManager() {
         sdkKey,
         bannerAdUnitId: applovinBannerAdUnitId,
         interstitialAdUnitId: applovinInterstitialAdUnitId,
+        interSplashAdUnitId: applovinInterSplashAdUnitId,
+        intersplashAdUnitId: applovinInterSplashAdUnitId,
         rewardedAdUnitId: applovinRewardedAdUnitId,
         nativeAdUnitId: applovinNativeAdUnitId,
       },
@@ -267,6 +282,12 @@ export default function AppConfigManager() {
                     <span className="text-stone-400">Interstitial Ads:</span>
                     <span className={conf.ads?.interstitialEnabled ? "text-emerald-400 font-semibold" : "text-stone-600"}>
                       {conf.ads?.interstitialEnabled ? "Enabled" : "Disabled"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-stone-400">InterSplash Ads:</span>
+                    <span className={(conf.ads?.interSplashEnabled || conf.ads?.intersplashEnabled) ? "text-emerald-400 font-semibold" : "text-stone-600"}>
+                      {(conf.ads?.interSplashEnabled || conf.ads?.intersplashEnabled) ? "Enabled" : "Disabled"}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
@@ -422,6 +443,18 @@ export default function AppConfigManager() {
                     </div>
 
                     <div className="flex items-center justify-between">
+                      <label htmlFor="interSplashToggle" className="text-xs text-stone-300">InterSplash (Splash) Ads</label>
+                      <button
+                        type="button"
+                        id="interSplashToggle"
+                        onClick={() => setInterSplashEnabled(!interSplashEnabled)}
+                        className="text-stone-400 hover:text-white transition"
+                      >
+                        {interSplashEnabled ? <ToggleRight className="w-9 h-9 text-emerald-500" /> : <ToggleLeft className="w-9 h-9" />}
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between">
                       <label htmlFor="rewardedToggle" className="text-xs text-stone-300">Rewarded Video Ads</label>
                       <button
                         type="button"
@@ -526,6 +559,20 @@ export default function AppConfigManager() {
 
                         <div>
                           <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+                            InterSplash (Splash) Ad Unit ID
+                          </label>
+                          <input
+                            type="text"
+                            value={interSplashAdUnitId}
+                            onChange={(e) => setInterSplashAdUnitId(e.target.value)}
+                            placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx"
+                            className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
+                            disabled={!interSplashEnabled}
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
                             Rewarded Video Ad Unit ID
                           </label>
                           <input
@@ -599,6 +646,20 @@ export default function AppConfigManager() {
                             placeholder="Enter Interstitial Ad Unit ID"
                             className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
                             disabled={!interstitialEnabled}
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+                            InterSplash (Splash) Ad Unit ID
+                          </label>
+                          <input
+                            type="text"
+                            value={applovinInterSplashAdUnitId}
+                            onChange={(e) => setApplovinInterSplashAdUnitId(e.target.value)}
+                            placeholder="Enter InterSplash Ad Unit ID"
+                            className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-850 text-white text-xs font-mono focus:outline-none"
+                            disabled={!interSplashEnabled}
                           />
                         </div>
 
