@@ -27,35 +27,19 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Retrieve settings to get the configured RapidAPI Key
+    // Retrieve settings to get configured Play API URL, fallback to lovelywombat service
     const settings = await SystemSettings.findOne();
-    const apiKey = settings?.apiKeys?.get("youtube_mp3_rapidapi_key") || process.env.RAPIDAPI_KEY;
+    const baseUrl = settings?.apiKeys?.get("play_api_url") || process.env.PLAY_API_URL || "https://ytdl.lovelywombat.box.ca/dl";
+    const downloadLink = `${baseUrl.replace(/\/+$/, '')}/${vid}`;
 
-    if (!apiKey) {
-      return errorResponse("RapidAPI integration is not configured. Please set the API key in settings.", 500);
-    }
-
-    // Hit RapidAPI YouTube MP3 service
-    const response = await fetch(
-      `https://youtube-mp36.p.rapidapi.com/dl?id=${vid}`,
-      {
-        headers: {
-          "x-rapidapi-host": "youtube-mp36.p.rapidapi.com",
-          "x-rapidapi-key": apiKey,
-        },
-      }
-    );
-
-    if (!response.ok) {
-      const errText = await response.text();
-      return errorResponse(`Downloader API error: ${errText || response.statusText}`, response.status);
-    }
-
-    const data = await response.json();
-
-    if (data.status !== "ok" && data.msg !== "success" && !data.link) {
-      return errorResponse(data.msg || "Failed to retrieve download link from RapidAPI", 400);
-    }
+    const data = {
+      status: "ok",
+      link: downloadLink,
+      vid,
+      title: searchParams.get("title") || "YouTube Track",
+      duration: 0,
+      filesize: 0,
+    };
 
     // Log Analytics Play Event
     AnalyticsEvent.create({
@@ -68,7 +52,7 @@ export async function GET(req: NextRequest) {
         filesize: data.filesize || 0,
         provider: "youtube",
       },
-    }).catch(err => console.error("Analytics play logging failed:", err));
+    }).catch((err: any) => console.error("Analytics play logging failed:", err));
 
     // Automatically save track to local database Track cache
     try {
