@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { initApi, successResponse, errorResponse, authenticateRequest } from "../../../lib/api-helper";
-import { SystemSettings, History, AnalyticsEvent, Track, AppConfig } from "@headless/database";
+import { SystemSettings, History, AnalyticsEvent, Track, AppConfig, PlayLog } from "@headless/database";
 
 export async function GET(req: NextRequest) {
   try {
@@ -40,6 +40,21 @@ export async function GET(req: NextRequest) {
       duration: 0,
       filesize: 0,
     };
+
+    // Log Play Hit in PlayLog (resource details, IP, package name, user)
+    const ipAddress = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || undefined;
+    const userAgent = req.headers.get("user-agent") || undefined;
+
+    PlayLog.create({
+      vid,
+      title: data.title,
+      artist: "YouTube Video",
+      playUrl: downloadLink,
+      packageName: packageName || undefined,
+      userId: userId || undefined,
+      ipAddress,
+      userAgent,
+    }).catch((err: any) => console.error("PlayLog logging failed:", err));
 
     // Log Analytics Play Event
     AnalyticsEvent.create({

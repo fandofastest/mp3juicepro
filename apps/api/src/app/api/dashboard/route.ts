@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { initApi, successResponse, errorResponse, authenticateRequest, authorizeRoles } from "../../../lib/api-helper";
-import { User, Favorite, AnalyticsEvent, AuditLog, Category } from "@headless/database";
+import { User, Favorite, AnalyticsEvent, AuditLog, Category, PlayLog } from "@headless/database";
 
 export async function GET(req: NextRequest) {
   try {
@@ -30,7 +30,8 @@ export async function GET(req: NextRequest) {
       45
     );
 
-    const playCount = Math.max(await AnalyticsEvent.countDocuments({ eventType: "Play Event" }), 1420);
+    const realPlayHits = await PlayLog.countDocuments();
+    const playCount = Math.max(realPlayHits, 1420);
 
     // Get Top Categories
     const categories = await Category.find({ enabled: true }).limit(5);

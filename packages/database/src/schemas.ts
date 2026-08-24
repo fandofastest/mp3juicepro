@@ -449,11 +449,39 @@ const AppConfigSchema = new Schema<IAppConfigDocument>(
   { timestamps: true }
 );
 
+// --- PLAY LOG SCHEMA (FOR TRACKING PLAY HITS & RESOURCE DETAILS) ---
+export interface IPlayLogDocument extends Document {
+  vid: string;
+  title?: string;
+  artist?: string;
+  playUrl: string;
+  packageName?: string;
+  userId?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  createdAt: Date;
+}
+
+const PlayLogSchema = new Schema<IPlayLogDocument>(
+  {
+    vid: { type: String, required: true, index: true },
+    title: { type: String },
+    artist: { type: String },
+    playUrl: { type: String, required: true },
+    packageName: { type: String, index: true },
+    userId: { type: String, index: true },
+    ipAddress: { type: String },
+    userAgent: { type: String },
+  },
+  { timestamps: { createdAt: true, updatedAt: false } }
+);
+
 // Export Mongoose Models
 if (mongoose.models.Category) delete mongoose.models.Category;
 if (mongoose.models.History) delete mongoose.models.History;
 if (mongoose.models.HomeSection) delete mongoose.models.HomeSection;
 if (mongoose.models.AppConfig) delete mongoose.models.AppConfig;
+if (mongoose.models.PlayLog) delete mongoose.models.PlayLog;
 
 export const User = mongoose.models.User || mongoose.model<IUserDocument>("User", UserSchema);
 export const HomeSection = mongoose.models.HomeSection || mongoose.model<IHomeSectionDocument>("HomeSection", HomeSectionSchema);
@@ -468,4 +496,6 @@ export const SystemSettings = mongoose.models.SystemSettings || mongoose.model<I
 export const Notification = mongoose.models.Notification || mongoose.model<INotificationDocument>("Notification", NotificationSchema);
 export const Track = mongoose.models.Track || mongoose.model<ITrackDocument>("Track", TrackSchema);
 export const AppConfig = mongoose.models.AppConfig || mongoose.model<IAppConfigDocument>("AppConfig", AppConfigSchema);
+export const PlayLog = mongoose.models.PlayLog || mongoose.model<IPlayLogDocument>("PlayLog", PlayLogSchema);
+
 

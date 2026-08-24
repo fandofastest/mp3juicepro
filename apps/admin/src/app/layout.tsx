@@ -19,6 +19,7 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
     { name: "Dashboard", href: "/", icon: LayoutDashboard },
     { name: "Users Directory", href: "/users", icon: UserIcon },
     { name: "Music Tracks", href: "/tracks", icon: Music },
+    { name: "Play Hit Logs", href: "/play-logs", icon: ListMusic },
     { name: "Home Builder", href: "/builder", icon: Sliders },
     { name: "Categories", href: "/categories", icon: FolderHeart },
     { name: "Banners", href: "/banners", icon: Image },
