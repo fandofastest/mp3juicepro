@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { initApi, errorResponse, authenticateRequest } from "../../../lib/api-helper";
+import { NextRequest } from "next/server";
+import { initApi, successResponse, errorResponse, authenticateRequest } from "../../../lib/api-helper";
 import { SystemSettings, History, AnalyticsEvent, Track, AppConfig } from "@headless/database";
 
 export async function GET(req: NextRequest) {
@@ -89,7 +89,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    return NextResponse.redirect(downloadLink);
+    return successResponse(data);
   } catch (error: any) {
     return errorResponse(error.message || "Internal server error", 500);
   }
