@@ -10,7 +10,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await JustAudioBackground.init(
     androidNotificationChannelId: 'com.mp3juicepro.audio',
-    androidNotificationChannelName: 'Mp3 Juice Pro Playback',
+    androidNotificationChannelName: 'Mp3 Juices Pro Playback',
     androidNotificationOngoing: true,
   );
 

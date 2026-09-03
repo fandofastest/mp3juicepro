@@ -10,10 +10,29 @@ export async function GET(req: NextRequest) {
     const packageName = searchParams.get("packageName");
 
     if (packageName) {
-      // Public route for specific client app by package name
+      // 1. Attempt to fetch live central remote config from newconfig dashboard
+      try {
+        const newconfigUrl = process.env.NEWCONFIG_API_URL || "https://newconfig-bmuj.vercel.app";
+        const res = await fetch(`${newconfigUrl}/api/config/${encodeURIComponent(packageName)}`, {
+          cache: "no-store",
+          headers: {
+            "x-forwarded-for": req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "",
+            "user-agent": req.headers.get("user-agent") || "",
+          },
+        });
+        if (res.ok) {
+          const remoteData = await res.json();
+          if (remoteData && !remoteData.error) {
+            return successResponse(remoteData);
+          }
+        }
+      } catch (err: any) {
+        console.error("Failed to fetch central remote config, falling back to local DB:", err.message);
+      }
+
+      // 2. Fallback to local database AppConfig if remote config is unreachable
       const config = await AppConfig.findOne({ packageName });
       if (!config) {
-        // Return default fallback config for app stability
         return successResponse({
           packageName,
           admob: {
@@ -84,7 +103,6 @@ export async function POST(req: NextRequest) {
       return errorResponse("Validation error", 400, parsed.error.errors);
     }
 
-    // Check if packageName already exists
     const existing = await AppConfig.findOne({ packageName: parsed.data.packageName });
     if (existing) {
       return errorResponse("Configuration for this package name already exists", 400);
@@ -117,7 +135,6 @@ export async function PUT(req: NextRequest) {
       return errorResponse("App configuration not found", 404);
     }
 
-    // If packageName is changed, verify uniqueness
     if (data.packageName && data.packageName !== config.packageName) {
       const existing = await AppConfig.findOne({ packageName: data.packageName });
       if (existing) {
@@ -154,7 +171,6 @@ export async function DELETE(req: NextRequest) {
       return errorResponse("App configuration not found", 404);
     }
 
-    // Hard delete for app config is fine since they are small configs
     await AppConfig.findByIdAndDelete(id);
 
     return successResponse(null, "App configuration deleted successfully");
