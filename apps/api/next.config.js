@@ -9,6 +9,15 @@ const nextConfig = {
     "@headless/database",
     "@headless/providers",
   ],
+  async redirects() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://juiceproapi.fando.id/api/:path*',
+        permanent: true, // HTTP 308
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

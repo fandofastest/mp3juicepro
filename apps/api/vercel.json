@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://juiceproapi.fando.id/api/:path*",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://juiceproapi.fando.id/:path*",
+      "statusCode": 308
+    }
+  ]
+}

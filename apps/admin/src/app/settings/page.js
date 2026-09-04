@@ -1,0 +1,273 @@
+"use client";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = SettingsManager;
+const react_1 = require("react");
+const api_client_1 = require("../../lib/api-client");
+const lucide_react_1 = require("lucide-react");
+function SettingsManager() {
+    const [loading, setLoading] = (0, react_1.useState)(true);
+    const [saving, setSaving] = (0, react_1.useState)(false);
+    const [success, setSuccess] = (0, react_1.useState)(null);
+    const [error, setError] = (0, react_1.useState)(null);
+    // Form Fields
+    const [appName, setAppName] = (0, react_1.useState)("MP3Juice Pro");
+    const [primaryColor, setPrimaryColor] = (0, react_1.useState)("#1DB954");
+    const [secondaryColor, setSecondaryColor] = (0, react_1.useState)("#191414");
+    const [theme, setTheme] = (0, react_1.useState)("dark");
+    const [language, setLanguage] = (0, react_1.useState)("en");
+    const [country, setCountry] = (0, react_1.useState)("US");
+    const [searchLimit, setSearchLimit] = (0, react_1.useState)(20);
+    const [cacheTtl, setCacheTtl] = (0, react_1.useState)(3600);
+    const [maintenanceMode, setMaintenanceMode] = (0, react_1.useState)(false);
+    const [minimumAppVersion, setMinimumAppVersion] = (0, react_1.useState)("1.0.0");
+    const [apiKeys, setApiKeys] = (0, react_1.useState)({});
+    const [testingKey, setTestingKey] = (0, react_1.useState)(null);
+    const [testResults, setTestResults] = (0, react_1.useState)({});
+    const testApiKey = async (provider, key) => {
+        if (!key) {
+            alert("Please enter a key before testing.");
+            return;
+        }
+        setTestingKey(provider);
+        setTestResults((prev) => ({ ...prev, [provider]: undefined }));
+        try {
+            const res = await (0, api_client_1.apiRequest)("/settings/test-key", "POST", { provider, key });
+            setTestResults((prev) => ({
+                ...prev,
+                [provider]: { success: true, msg: res.message || "Connection verified successfully!" },
+            }));
+        }
+        catch (err) {
+            setTestResults((prev) => ({
+                ...prev,
+                [provider]: { success: false, msg: err.message || "Key verification failed." },
+            }));
+        }
+        finally {
+            setTestingKey(null);
+        }
+    };
+    (0, react_1.useEffect)(() => {
+        (0, api_client_1.apiRequest)("/settings")
+            .then((res) => {
+            setAppName(res.appName);
+            setPrimaryColor(res.primaryColor);
+            setSecondaryColor(res.secondaryColor);
+            setTheme(res.theme);
+            setLanguage(res.language);
+            setCountry(res.country);
+            setSearchLimit(res.searchLimit);
+            setCacheTtl(res.cacheTtl);
+            setMaintenanceMode(res.maintenanceMode);
+            setMinimumAppVersion(res.minimumAppVersion);
+            setApiKeys(res.apiKeys || {});
+            setLoading(false);
+        })
+            .catch((err) => {
+            setError(err.message || "Failed to load settings");
+            setLoading(false);
+        });
+    }, []);
+    const handleSave = async (e) => {
+        e.preventDefault();
+        setSaving(true);
+        setSuccess(null);
+        setError(null);
+        try {
+            await (0, api_client_1.apiRequest)("/settings", "PUT", {
+                appName,
+                primaryColor,
+                secondaryColor,
+                theme,
+                language,
+                country,
+                searchLimit: Number(searchLimit),
+                cacheTtl: Number(cacheTtl),
+                maintenanceMode,
+                minimumAppVersion,
+                apiKeys,
+            });
+            setSuccess("Global configurations updated successfully!");
+        }
+        catch (err) {
+            setError(err.message || "Failed to update configurations");
+        }
+        finally {
+            setSaving(false);
+        }
+    };
+    if (loading) {
+        return (<div className="flex items-center justify-center min-h-[50vh]">
+        <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"/>
+      </div>);
+    }
+    return (<div className="space-y-6 max-w-4xl">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-white">System Settings</h1>
+          <p className="text-sm text-stone-400 mt-1">Configure global application state, colors, limits, and API integrations.</p>
+        </div>
+      </div>
+
+      {success && (<div className="p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-lg flex items-center gap-2">
+          <lucide_react_1.CheckCircle className="w-5 h-5 shrink-0"/>
+          <span className="text-xs font-semibold">{success}</span>
+        </div>)}
+
+      {error && (<div className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg flex items-center gap-2">
+          <lucide_react_1.AlertTriangle className="w-5 h-5 shrink-0"/>
+          <span className="text-xs font-semibold">{error}</span>
+        </div>)}
+
+      <form onSubmit={handleSave} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* General settings card */}
+          <div className="p-6 bg-stone-900 border border-stone-800 rounded-xl space-y-4">
+            <h3 className="font-bold text-white mb-2 flex items-center gap-2">
+              <lucide_react_1.Settings className="w-5 h-5 text-emerald-500"/>
+              General Branding
+            </h3>
+
+            <div>
+              <label className="block text-xs font-semibold text-stone-300 uppercase tracking-wider mb-2">
+                Application Title
+              </label>
+              <input type="text" value={appName} onChange={(e) => setAppName(e.target.value)} required className="w-full px-4 py-2.5 rounded-lg bg-stone-950 border border-stone-800 text-white text-sm focus:outline-none focus:border-emerald-500"/>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-stone-300 uppercase tracking-wider mb-2">
+                  Accent Color
+                </label>
+                <div className="flex gap-2">
+                  <input type="color" value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} className="w-12 h-10 p-1 bg-stone-950 border border-stone-800 rounded-lg cursor-pointer shrink-0"/>
+                  <input type="text" value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} className="w-full px-3 py-2.5 bg-stone-950 border border-stone-800 text-stone-300 text-sm focus:outline-none font-mono"/>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-stone-300 uppercase tracking-wider mb-2">
+                  Background Color
+                </label>
+                <div className="flex gap-2">
+                  <input type="color" value={secondaryColor} onChange={(e) => setSecondaryColor(e.target.value)} className="w-12 h-10 p-1 bg-stone-950 border border-stone-800 rounded-lg cursor-pointer shrink-0"/>
+                  <input type="text" value={secondaryColor} onChange={(e) => setSecondaryColor(e.target.value)} className="w-full px-3 py-2.5 bg-stone-950 border border-stone-800 text-stone-300 text-sm focus:outline-none font-mono"/>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-stone-300 uppercase tracking-wider mb-2">
+                  Default Theme
+                </label>
+                <select value={theme} onChange={(e) => setTheme(e.target.value)} className="w-full px-3 py-2.5 rounded-lg bg-stone-950 border border-stone-800 text-white text-sm">
+                  <option value="dark">Dark Theme</option>
+                  <option value="light">Light Theme</option>
+                  <option value="system">Follow System</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-stone-300 uppercase tracking-wider mb-2">
+                  Language
+                </label>
+                <input type="text" value={language} onChange={(e) => setLanguage(e.target.value)} className="w-full px-3 py-2.5 rounded-lg bg-stone-950 border border-stone-800 text-white text-sm"/>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-stone-300 uppercase tracking-wider mb-2">
+                  Country
+                </label>
+                <input type="text" value={country} onChange={(e) => setCountry(e.target.value)} className="w-full px-3 py-2.5 rounded-lg bg-stone-950 border border-stone-800 text-white text-sm"/>
+              </div>
+            </div>
+          </div>
+
+          {/* Limits and states Card */}
+          <div className="p-6 bg-stone-900 border border-stone-800 rounded-xl space-y-4">
+            <h3 className="font-bold text-white mb-2 flex items-center gap-2">
+              <lucide_react_1.AlertTriangle className="w-5 h-5 text-yellow-500"/>
+              Controls & Operations
+            </h3>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-stone-300 uppercase tracking-wider mb-2">
+                  Search Limit
+                </label>
+                <input type="number" value={searchLimit} onChange={(e) => setSearchLimit(Number(e.target.value))} className="w-full px-4 py-2.5 rounded-lg bg-stone-950 border border-stone-800 text-white text-sm"/>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-stone-300 uppercase tracking-wider mb-2">
+                  Cache Expiry (secs)
+                </label>
+                <input type="number" value={cacheTtl} onChange={(e) => setCacheTtl(Number(e.target.value))} className="w-full px-4 py-2.5 rounded-lg bg-stone-950 border border-stone-800 text-white text-sm"/>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-stone-300 uppercase tracking-wider mb-2">
+                Minimum App Version
+              </label>
+              <input type="text" value={minimumAppVersion} onChange={(e) => setMinimumAppVersion(e.target.value)} className="w-full px-4 py-2.5 rounded-lg bg-stone-950 border border-stone-800 text-white text-sm font-mono"/>
+            </div>
+
+            <div className="p-4 rounded-lg bg-yellow-500/5 border border-yellow-500/10 flex items-center justify-between">
+              <div>
+                <h4 className="text-xs font-bold text-yellow-400 uppercase tracking-wider">Maintenance Mode</h4>
+                <p className="text-[10px] text-stone-400 mt-1">If enabled, API clients will show maintenance screens.</p>
+              </div>
+              <input type="checkbox" checked={maintenanceMode} onChange={(e) => setMaintenanceMode(e.target.checked)} className="w-5 h-5 text-yellow-500 bg-stone-950 border-stone-800 rounded focus:ring-yellow-500 cursor-pointer"/>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-6 bg-stone-900 border border-stone-800 rounded-xl space-y-4">
+          <h3 className="font-bold text-white mb-2">Integrations & API Secrets</h3>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-stone-400 uppercase tracking-wider mb-2">
+                YouTube Data API v3 Key Stub
+              </label>
+              <div className="flex gap-3">
+                <input type="password" value={apiKeys.youtube_api_key || ""} onChange={(e) => setApiKeys({ ...apiKeys, youtube_api_key: e.target.value })} className="flex-1 px-4 py-2.5 rounded-lg bg-stone-950 border border-stone-850 text-white text-sm font-mono focus:outline-none" placeholder="API Key (mock config)"/>
+                <button type="button" onClick={() => testApiKey("youtube", apiKeys.youtube_api_key)} disabled={testingKey !== null} className="px-4 py-2.5 bg-stone-800 hover:bg-stone-700 disabled:opacity-50 text-xs font-semibold text-stone-200 rounded-lg transition">
+                  {testingKey === "youtube" ? "Testing..." : "Test Connection"}
+                </button>
+              </div>
+              {testResults.youtube && (<p className={`text-xs mt-1.5 font-semibold ${testResults.youtube.success ? "text-emerald-400" : "text-red-400"}`}>
+                  {testResults.youtube.msg}
+                </p>)}
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-stone-400 uppercase tracking-wider mb-2">
+                YouTube MP3 Downloader RapidAPI Key
+              </label>
+              <div className="flex gap-3">
+                <input type="password" value={apiKeys.youtube_mp3_rapidapi_key || ""} onChange={(e) => setApiKeys({ ...apiKeys, youtube_mp3_rapidapi_key: e.target.value })} className="flex-1 px-4 py-2.5 rounded-lg bg-stone-950 border border-stone-850 text-white text-sm font-mono focus:outline-none" placeholder="RapidAPI Key"/>
+                <button type="button" onClick={() => testApiKey("rapidapi", apiKeys.youtube_mp3_rapidapi_key)} disabled={testingKey !== null} className="px-4 py-2.5 bg-stone-800 hover:bg-stone-700 disabled:opacity-50 text-xs font-semibold text-stone-200 rounded-lg transition">
+                  {testingKey === "rapidapi" ? "Testing..." : "Test Connection"}
+                </button>
+              </div>
+              {testResults.rapidapi && (<p className={`text-xs mt-1.5 font-semibold ${testResults.rapidapi.success ? "text-emerald-400" : "text-red-400"}`}>
+                  {testResults.rapidapi.msg}
+                </p>)}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-end pt-2">
+          <button type="submit" disabled={saving} className="flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-black font-bold rounded-lg text-sm transition shadow-lg shadow-emerald-500/10 duration-200">
+            <lucide_react_1.Save className="w-4 h-4"/>
+            {saving ? "Saving Changes..." : "Save Settings"}
+          </button>
+        </div>
+      </form>
+    </div>);
+}
+//# sourceMappingURL=page.js.map

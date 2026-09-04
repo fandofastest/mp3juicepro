@@ -2,16 +2,17 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'https://mp3juicepro-api.vercel.app/api';
+  static const String baseUrl = 'https://juiceproapi.fando.id/api';
   static const String packageName = 'com.mp3juice.mp3juicepro';
   static const String jamendoClientId = '87c44b11';
+  static const String appConfigUrl = 'https://newconfig-bmuj.vercel.app/api/config/com.mp3juice.mp3juicepro?apiKey=rc_6f5fb781ff3ee02b4698403dbae4020c2b0231b9fb5b0b3d';
   static bool isSafeModeActive = false;
 
   // Fetch App Configuration (Ads, Safe Mode, App Update, etc.)
   static Future<Map<String, dynamic>> fetchAppConfig() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/app-config?packageName=$packageName'),
+        Uri.parse(appConfigUrl),
         headers: {
           'x-package-name': packageName,
         },
@@ -19,8 +20,13 @@ class ApiService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         print('Fetched App Config Response: $data');
-        if (data['success'] == true && data['data'] != null) {
-          final config = data['data'] as Map<String, dynamic>;
+        if (data is Map<String, dynamic>) {
+          Map<String, dynamic> config;
+          if (data['data'] != null && data['data'] is Map<String, dynamic>) {
+            config = data['data'] as Map<String, dynamic>;
+          } else {
+            config = data;
+          }
           isSafeModeActive = config['safeMode'] == true;
           return config;
         }

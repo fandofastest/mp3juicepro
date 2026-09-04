@@ -5,6 +5,7 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'providers/player_provider.dart';
 import 'providers/auth_provider.dart';
 import 'screens/main_navigation.dart';
+import 'screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MainNavigation(),
+      home: const SplashScreen(),
     );
   }
 }
